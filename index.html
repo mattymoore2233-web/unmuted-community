@@ -864,6 +864,10 @@
 
     // Initial load
     renderHomeTopics();
+
+if (location.hash === "#donate") {
+  showView("story");
+}
     loadThreads();
   </script>
 </body>
