@@ -482,7 +482,7 @@
           posts: [
             { author: 'Anonymous', time: '5 hours ago', body: 'New city, no mates, weekends feel long. Not really a pub person. Any practical tips?' },
             { author: 'TrailRunner', time: '4 hours ago', body: 'Joined a local running club. Zero pressure at first, then conversations started naturally.' },
-            { author: 'NewTown', time: '3 hours ago', body: 'Volunteering once a month helped me. It felt useful and got me around other men without forcing it.' }
+            { author: 'NewTown', time: '3 hours ago', body: 'Volunteering once a month helped me. It felt useful and got me around other people without forcing it.' }
           ]
         }
       ];
@@ -594,11 +594,17 @@
     document.getElementById('newThreadModal').addEventListener('click', function (event) {
       if (event.target === this) closeNewThread();
     });
-    document.querySelectorAll('input[name="identity"]').forEach el => el.addEventListener('change', toggleNickname);
-    document.querySelectorAll('input[name="replyIdentity"]').forEach(el => el.addEventListener('change', () => {
-      const isNick = document.querySelector('input[name="replyIdentity"]:checked').value === 'nickname';
-      document.getElementById('replyNickField').classList.toggle('hide', !isNick);
-    }));
+
+    document.querySelectorAll('input[name="identity"]').forEach((el) => {
+      el.addEventListener('change', toggleNickname);
+    });
+
+    document.querySelectorAll('input[name="replyIdentity"]').forEach((el) => {
+      el.addEventListener('change', () => {
+        const isNick = document.querySelector('input[name="replyIdentity"]:checked').value === 'nickname';
+        document.getElementById('replyNickField').classList.toggle('hide', !isNick);
+      });
+    });
 
     renderTopicGrid();
     renderThreads();
