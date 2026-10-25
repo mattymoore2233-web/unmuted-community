@@ -4,7 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Unmuted — Anonymous conversations for men</title>
-  <meta name="description" content="A calm, anonymous space for men to talk about mental health, pressure, relationships and life. No names required." />
+  <meta name="description" content="Anonymous community for men to talk openly." />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --bg: #0b1120;
@@ -12,529 +13,237 @@
       --bg-card: #1a2332;
       --bg-elevated: #243044;
       --border: #2d3a4f;
-      --border-soft: #374151;
       --text: #f8fafc;
       --text-muted: #94a3b8;
       --text-dim: #64748b;
       --accent: #2dd4bf;
       --accent-hover: #14b8a6;
       --accent-soft: rgba(45, 212, 191, 0.14);
-      --accent-glow: rgba(45, 212, 191, 0.25);
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
       --radius: 14px;
-      --radius-lg: 20px;
-      --shadow: 0 10px 40px rgba(0, 0, 0, 0.45);
-      --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --radius-lg: 18px;
+      --font: system-ui, -apple-system, "Segoe UI", sans-serif;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    body {
-      font-family: var(--font);
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.65;
-      min-height: 100vh;
-    }
-    a { color: var(--accent); text-decoration: none; transition: color 0.15s; }
-    a:hover { color: var(--accent-hover); }
-
-    .nav {
-      position: sticky; top: 0; z-index: 100;
-      background: rgba(11, 17, 32, 0.92);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border);
-      padding: 0 1.5rem;
-    }
-    .nav-inner {
-      max-width: 1120px; margin: 0 auto;
-      display: flex; align-items: center; justify-content: space-between; height: 68px;
-    }
-    .logo { font-weight: 750; font-size: 1.45rem; letter-spacing: -0.03em; color: var(--text); cursor: pointer; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: var(--font); }
+    body { line-height: 1.6; }
+    a { color: var(--accent); text-decoration: none; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+    .nav { position: sticky; top: 0; z-index: 20; background: rgba(11,17,32,.92); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); }
+    .nav-inner { height: 70px; display: flex; align-items: center; justify-content: space-between; max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+    .logo { font-weight: 800; font-size: 1.5rem; letter-spacing: -0.04em; cursor: pointer; }
     .logo span { color: var(--accent); }
-    .nav-links { display: flex; gap: 1.8rem; align-items: center; }
-    .nav-links a, .nav-links button.link {
-      color: var(--text-muted); font-size: 0.95rem; font-weight: 500;
-      background: none; border: none; cursor: pointer; font-family: inherit;
-    }
-    .nav-links a:hover, .nav-links a.active,
-    .nav-links button.link:hover { color: var(--text); }
-
+    .nav-links { display: flex; gap: 18px; align-items: center; }
+    .nav-links button { background: none; border: 0; color: var(--text-muted); font: inherit; cursor: pointer; }
+    .nav-links button:hover { color: var(--text); }
     .btn {
-      display: inline-flex; align-items: center; justify-content: center; gap: 0.45rem;
-      background: var(--accent); color: #0b1120; font-weight: 650; font-size: 0.95rem;
-      padding: 0.7rem 1.35rem; border-radius: 10px; border: none; cursor: pointer;
-      transition: all 0.18s ease; font-family: inherit;
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      background: var(--accent); color: #06131a; border: none; padding: 12px 18px; border-radius: 10px;
+      font-weight: 700; cursor: pointer; transition: .2s ease;
     }
-    .btn:hover { background: var(--accent-hover); box-shadow: 0 0 20px var(--accent-glow); transform: translateY(-1px); }
-    .btn-outline { background: transparent; color: var(--text); border: 1.5px solid var(--border); }
-    .btn-outline:hover { background: var(--bg-elevated); border-color: var(--text-muted); box-shadow: none; }
-    .btn-sm { padding: 0.5rem 1.1rem; font-size: 0.875rem; }
-    .btn-lg { padding: 0.95rem 1.8rem; font-size: 1.08rem; border-radius: 12px; }
-
-    .container { max-width: 1120px; margin: 0 auto; padding: 0 1.5rem; }
-    section { padding: 4.5rem 0; }
-
-    .hero { position: relative; padding: 6rem 0 5.5rem; text-align: center; overflow: hidden; }
-    .hero-bg {
-      position: absolute; inset: 0;
-      background:
-        radial-gradient(ellipse 80% 55% at 50% -5%, rgba(45, 212, 191, 0.2), transparent),
-        radial-gradient(ellipse 50% 40% at 85% 70%, rgba(52, 211, 153, 0.07), transparent),
-        linear-gradient(180deg, var(--bg) 0%, var(--bg-soft) 100%);
-      z-index: 0;
-    }
-    .hero .container { position: relative; z-index: 1; }
-    .hero-badge {
-      display: inline-flex; align-items: center; gap: 0.5rem;
-      background: var(--accent-soft); color: var(--accent); font-size: 0.85rem; font-weight: 600;
-      padding: 0.4rem 1rem; border-radius: 100px; margin-bottom: 1.5rem;
-      border: 1px solid rgba(45, 212, 191, 0.3);
-    }
-    .hero h1 {
-      font-size: clamp(2.5rem, 6vw, 3.85rem); font-weight: 750;
-      letter-spacing: -0.04em; line-height: 1.1; margin-bottom: 1.4rem;
-    }
-    .hero h1 span { color: var(--accent); }
-    .hero p { font-size: 1.25rem; color: var(--text-muted); max-width: 520px; margin: 0 auto 2.6rem; line-height: 1.6; }
-    .hero-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 3.5rem; }
-    .trust-row { display: flex; gap: 2.5rem; justify-content: center; flex-wrap: wrap; color: var(--text-muted); font-size: 0.92rem; }
-    .trust-item { display: flex; align-items: center; gap: 0.6rem; }
-    .trust-item .icon {
-      width: 38px; height: 38px; border-radius: 10px; background: var(--accent-soft);
-      display: flex; align-items: center; justify-content: center; color: var(--accent); flex-shrink: 0;
-    }
-    .trust-item svg { width: 18px; height: 18px; }
-
-    .section-header { text-align: center; margin-bottom: 2.75rem; }
-    .section-title { font-size: 1.9rem; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 0.55rem; }
-    .section-sub { color: var(--text-muted); font-size: 1.1rem; max-width: 480px; margin: 0 auto; }
-
-    .topics-section { background: var(--bg-soft); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-    .topics-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.15rem; }
-    .topic-card {
-      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
-      padding: 1.5rem; cursor: pointer; transition: all 0.2s ease; text-align: left;
-      width: 100%; color: inherit; font-family: inherit; display: block; position: relative; overflow: hidden;
-    }
-    .topic-card::before {
-      content: ""; position: absolute; top: 0; left: 0; width: 4px; height: 100%;
-      background: var(--accent); opacity: 0; transition: opacity 0.2s;
-    }
-    .topic-card:hover {
-      border-color: rgba(45, 212, 191, 0.4); background: var(--bg-elevated);
-      transform: translateY(-3px); box-shadow: var(--shadow);
-    }
-    .topic-card:hover::before { opacity: 1; }
-    .topic-icon {
-      width: 44px; height: 44px; border-radius: 12px; background: var(--accent-soft);
-      display: flex; align-items: center; justify-content: center; color: var(--accent);
-      margin-bottom: 1rem; font-size: 1.3rem;
-    }
-    .topic-card h3 { font-size: 1.08rem; margin-bottom: 0.35rem; font-weight: 650; }
-    .topic-card p { font-size: 0.88rem; color: var(--text-muted); line-height: 1.45; }
-    .topic-count { font-size: 0.8rem; color: var(--accent); margin-top: 0.85rem; font-weight: 500; }
-
-    .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; }
-    .step {
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: var(--radius-lg); padding: 2rem 1.75rem;
-    }
-    .step-num {
-      display: inline-flex; width: 36px; height: 36px; align-items: center; justify-content: center;
-      background: var(--accent); color: #0b1120; font-weight: 750; border-radius: 10px;
-      margin-bottom: 1.15rem; font-size: 0.95rem;
-    }
-    .step h3 { font-size: 1.15rem; margin-bottom: 0.55rem; font-weight: 650; }
-    .step p { color: var(--text-muted); font-size: 0.98rem; line-height: 1.55; }
-
-    .safety-banner {
-      background: linear-gradient(135deg, rgba(45, 212, 191, 0.1), rgba(52, 211, 153, 0.05));
-      border: 1px solid rgba(45, 212, 191, 0.28); border-radius: var(--radius-lg);
-      padding: 2rem 2.25rem; display: flex; gap: 1.5rem; align-items: flex-start;
-    }
-    .safety-banner .icon-wrap {
-      width: 48px; height: 48px; border-radius: 12px; background: var(--accent-soft);
-      display: flex; align-items: center; justify-content: center; color: var(--accent); flex-shrink: 0;
-    }
-    .safety-banner h3 { font-size: 1.15rem; margin-bottom: 0.5rem; }
-    .safety-banner p { color: var(--text-muted); font-size: 0.98rem; margin-bottom: 0.35rem; }
-
-    .page-header { padding: 3rem 0 1.75rem; position: relative; }
-    .page-header::before {
-      content: ""; position: absolute; inset: 0;
-      background: radial-gradient(ellipse 70% 80% at 25% 0%, rgba(45, 212, 191, 0.13), transparent); z-index: 0;
-    }
-    .page-header .container { position: relative; z-index: 1; }
-    .page-header h1 { font-size: 2.25rem; font-weight: 750; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
-    .page-header p { color: var(--text-muted); font-size: 1.1rem; max-width: 520px; }
-
-    .community-layout {
-      display: grid; grid-template-columns: 250px 1fr; gap: 2rem;
-      align-items: start; padding-bottom: 4rem;
-    }
-    @media (max-width: 860px) {
-      .community-layout { grid-template-columns: 1fr; }
-      .sidebar { display: none; }
-    }
-    .sidebar {
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: var(--radius-lg); padding: 1.35rem; position: sticky; top: 88px;
-    }
-    .sidebar h3 {
-      font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.07em;
-      color: var(--text-dim); margin-bottom: 0.9rem; font-weight: 600;
-    }
-    .sidebar-list { list-style: none; }
-    .sidebar-list li a {
-      display: block; padding: 0.55rem 0.8rem; border-radius: 8px;
-      color: var(--text-muted); font-size: 0.95rem; margin-bottom: 2px; transition: all 0.15s;
-    }
-    .sidebar-list li a:hover { background: var(--bg-elevated); color: var(--text); }
-    .sidebar-list li a.active { background: var(--accent-soft); color: var(--accent); font-weight: 550; }
-
-    .feed-header {
-      display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;
-    }
-
-    .thread {
-      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
-      padding: 1.45rem 1.55rem; margin-bottom: 1rem; cursor: pointer; transition: all 0.18s ease;
-    }
-    .thread:hover {
-      border-color: rgba(45, 212, 191, 0.35); background: var(--bg-elevated);
-      transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-    }
-    .thread-meta {
-      display: flex; gap: 0.65rem; align-items: center; font-size: 0.85rem;
-      color: var(--text-dim); margin-bottom: 0.55rem; flex-wrap: wrap;
-    }
-    .username { color: var(--accent); font-weight: 600; }
-    .thread h3 { font-size: 1.12rem; font-weight: 650; margin-bottom: 0.45rem; line-height: 1.35; }
-    .thread p {
-      color: var(--text-muted); font-size: 0.95rem;
-      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.5;
-    }
-    .thread-stats { display: flex; gap: 1.3rem; margin-top: 1rem; font-size: 0.85rem; color: var(--text-dim); }
-
-    .thread-detail { max-width: 700px; }
-    .back-link {
-      display: inline-flex; align-items: center; gap: 0.4rem; color: var(--text-muted);
-      font-size: 0.95rem; margin-bottom: 1.6rem; cursor: pointer; background: none;
-      border: none; font-family: inherit; padding: 0;
-    }
-    .back-link:hover { color: var(--text); }
-
-    .post {
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 1.55rem; margin-bottom: 1rem;
-    }
-    .post.op {
-      border-left: 4px solid var(--accent);
-      background: linear-gradient(90deg, rgba(45, 212, 191, 0.07), var(--bg-card));
-    }
-    .post-header {
-      display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 0.8rem; flex-wrap: wrap; gap: 0.5rem;
-    }
-    .post-body { font-size: 1.05rem; line-height: 1.7; white-space: pre-wrap; }
-
-    .reply-form {
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: var(--radius-lg); padding: 1.5rem; margin-top: 1.75rem;
-    }
-    .form-group { margin-bottom: 1.2rem; }
-    .form-group label {
-      display: block; font-size: 0.9rem; font-weight: 550;
-      margin-bottom: 0.45rem; color: var(--text-muted);
-    }
-    .form-group input, .form-group select, .form-group textarea {
-      width: 100%; background: var(--bg); border: 1.5px solid var(--border);
-      border-radius: 10px; color: var(--text); padding: 0.8rem 1.05rem;
-      font-family: inherit; font-size: 1rem; transition: border-color 0.15s;
-    }
-    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-      outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft);
-    }
-    .form-group textarea { resize: vertical; min-height: 120px; }
-    .anon-option {
-      display: flex; align-items: flex-start; gap: 0.8rem; background: var(--bg);
-      border: 1.5px solid var(--border); border-radius: 10px; padding: 0.95rem 1.1rem;
-      margin-bottom: 0.65rem; cursor: pointer; transition: border-color 0.15s;
-    }
-    .anon-option:hover { border-color: var(--border-soft); }
-    .anon-option:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); }
-    .anon-option input { width: auto; margin-top: 0.2rem; accent-color: var(--accent); }
-    .anon-option strong { color: var(--text); display: block; margin-bottom: 0.15rem; }
-    .anon-option span { color: var(--text-muted); font-size: 0.88rem; }
-    .form-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; }
-    .anon-note { font-size: 0.85rem; color: var(--text-dim); }
-
-    .modal-overlay {
-      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(4px);
-      display: none; align-items: center; justify-content: center; z-index: 200; padding: 1.5rem;
-    }
-    .modal-overlay.open { display: flex; }
-    .modal {
-      background: var(--bg-card); border: 1px solid var(--border); border-radius: 18px;
-      width: 100%; max-width: 540px; padding: 2rem; box-shadow: var(--shadow);
-      max-height: 90vh; overflow-y: auto;
-    }
-    .modal h2 { font-size: 1.4rem; margin-bottom: 1.4rem; letter-spacing: -0.02em; }
-    .modal-actions { display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.6rem; }
-
-    .crisis {
-      background: #1c1917; border-top: 1px solid #44403c; padding: 1.6rem;
-      text-align: center; font-size: 0.95rem; color: #d6d3d1;
-    }
+    .btn:hover { background: var(--accent-hover); }
+    .btn.outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+    .btn.outline:hover { background: var(--bg-elevated); }
+    .hero { padding: 90px 0 60px; text-align: center; background: radial-gradient(circle at top, rgba(45,212,191,.15), transparent 40%), linear-gradient(180deg, var(--bg), var(--bg-soft)); }
+    .hero-badge { display: inline-block; padding: 6px 14px; border-radius: 999px; background: rgba(45,212,191,.12); border: 1px solid rgba(45,212,191,.25); color: var(--accent); font-weight: 700; margin-bottom: 22px; }
+    h1 { font-size: clamp(2.5rem, 6vw, 4rem); line-height: 1.05; letter-spacing: -0.05em; margin: 0 auto 18px; max-width: 750px; }
+    h1 span { color: var(--accent); }
+    .subtitle { max-width: 620px; margin: 0 auto 26px; color: var(--text-muted); font-size: 1.15rem; }
+    .hero-actions { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin-bottom: 32px; }
+    .topic-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 24px; }
+    .topic-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; text-align: left; color: var(--text); cursor: pointer; transition: .2s ease; }
+    .topic-card:hover { transform: translateY(-2px); border-color: rgba(45,212,191,.4); box-shadow: var(--shadow); }
+    .topic-icon { width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; background: var(--accent-soft); margin-bottom: 12px; font-size: 1.2rem; }
+    .topic-card h3 { margin: 0 0 8px; font-size: 1.08rem; }
+    .topic-card p { margin: 0; color: var(--text-muted); font-size: .9rem; }
+    .section { padding: 64px 0; }
+    .section-head { text-align: center; margin-bottom: 28px; }
+    .section-head h2 { margin: 0 0 10px; font-size: clamp(2rem, 4vw, 2.8rem); letter-spacing: -0.04em; }
+    .section-head p { color: var(--text-muted); margin: 0 auto; max-width: 500px; }
+    .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap: 18px; }
+    .step { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; }
+    .step-num { width: 34px; height: 34px; display: inline-grid; place-items: center; border-radius: 10px; background: var(--accent); color: #07151b; font-weight: 800; margin-bottom: 14px; }
+    .step h3 { margin: 0 0 8px; }
+    .step p { margin: 0; color: var(--text-muted); }
+    .layout { display: grid; grid-template-columns: 240px 1fr; gap: 24px; }
+    .sidebar { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px; position: sticky; top: 90px; height: fit-content; }
+    .sidebar h3 { font-size: .75rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: .08em; margin: 0 0 12px; }
+    .topic-list { list-style: none; padding: 0; margin: 0; }
+    .topic-list li { margin: 4px 0; }
+    .topic-list button { width: 100%; text-align: left; border: 0; background: transparent; color: var(--text-muted); font: inherit; padding: 10px 12px; border-radius: 8px; cursor: pointer; }
+    .topic-list button.active { background: rgba(45,212,191,.1); color: var(--accent); }
+    .thread-list { display: grid; gap: 14px; }
+    .thread { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; cursor: pointer; transition: .2s ease; }
+    .thread:hover { border-color: rgba(45,212,191,.35); transform: translateY(-2px); }
+    .meta { display: flex; flex-wrap: wrap; gap: 8px; color: var(--text-dim); font-size: .82rem; }
+    .meta .author { color: var(--accent); font-weight: 700; }
+    .thread h3 { margin: 10px 0 8px; font-size: 1.12rem; }
+    .thread p { margin: 0; color: var(--text-muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .stats { margin-top: 12px; display: flex; gap: 18px; color: var(--text-dim); font-size: .84rem; }
+    .page-header { padding: 42px 0 12px; }
+    .page-header h1 { margin: 0; font-size: clamp(2rem, 4vw, 2.8rem); }
+    .page-header p { margin: 8px 0 0; color: var(--text-muted); }
+    .thread-detail { max-width: 760px; }
+    .post { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 12px; }
+    .post.op { border-left: 4px solid var(--accent); }
+    .post-header { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+    .post-body { white-space: pre-wrap; line-height: 1.7; color: var(--text); }
+    .reply-form { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; margin-top: 18px; }
+    .field { margin-bottom: 16px; }
+    label { display: block; margin-bottom: 8px; color: var(--text-muted); font-size: .92rem; }
+    input, select, textarea { width: 100%; background: #0b1120; border: 1px solid var(--border); color: var(--text); border-radius: 10px; padding: 12px 14px; font: inherit; }
+    textarea { min-height: 120px; resize: vertical; }
+    .radio-box { display: flex; gap: 12px; align-items: center; padding: 12px 14px; background: #0b1120; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; }
+    .radio-box input { width: auto; }
+    .hide { display: none !important; }
+    .modal { position: fixed; inset: 0; background: rgba(0,0,0,.7); display: none; align-items: center; justify-content: center; z-index: 100; padding: 24px; }
+    .modal.open { display: flex; }
+    .modal-card { width: min(560px, 100%); background: var(--bg-card); border: 1px solid var(--border); border-radius: 18px; padding: 22px; box-shadow: var(--shadow); }
+    .modal-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 18px; }
+    .small-note { color: var(--text-dim); font-size: .84rem; }
+    .footer { border-top: 1px solid var(--border); padding: 30px 0; color: var(--text-muted); }
+    .footer-inner { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .crisis { background: #1c1917; color: #d6d3d1; border-top: 1px solid #44403c; padding: 18px 0; text-align: center; }
     .crisis strong { color: #fbbf24; }
     .crisis a { color: #fbbf24; }
-
-    footer {
-      border-top: 1px solid var(--border); padding: 2.75rem 0;
-      color: var(--text-muted); font-size: 0.9rem; background: var(--bg-soft);
-    }
-    .footer-inner { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; }
-
-    .view { display: none; }
-    .view.active { display: block; }
-    .hidden { display: none !important; }
-
-    @media (max-width: 640px) {
-      .nav-links a:not(.btn), .nav-links button.link:not(.btn) { display: none; }
-      .hero { padding: 4rem 0 3.5rem; }
-      .page-header { padding-top: 2.25rem; }
-      .safety-banner { flex-direction: column; gap: 1rem; }
-    }
+    @media (max-width: 800px) { .layout { grid-template-columns: 1fr; } .sidebar { position: static; } }
   </style>
 </head>
 <body>
-
-  <!-- NAV -->
   <nav class="nav">
     <div class="nav-inner">
       <div class="logo" onclick="showView('home')">Unmuted<span>.</span></div>
       <div class="nav-links">
-        <button type="button" class="link" onclick="showView('community')">Community</button>
-        <button type="button" class="link" onclick="showView('story')">Our Story</button>
-        <button type="button" class="link" onclick="showView('home'); setTimeout(()=>document.getElementById('how').scrollIntoView(),100)">How it works</button>
-        <button type="button" class="btn btn-sm" onclick="openNewThread()">Start talking</button>
+        <button onclick="showView('community')">Community</button>
+        <button onclick="showView('story')">Our Story</button>
+        <button onclick="showView('home')">How it works</button>
+        <button class="btn" onclick="openNewThread()">Start talking</button>
       </div>
     </div>
   </nav>
 
-  <!-- ========== HOME VIEW ========== -->
-  <div id="view-home" class="view active">
-    <section class="hero">
-      <div class="hero-bg"></div>
+  <section id="view-home" class="view active">
+    <div class="hero">
       <div class="container">
-        <div class="hero-badge">
-          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          Fully anonymous by default
-        </div>
-        <h1>Talk freely.<br><span>Stay unmuted.</span></h1>
-        <p>A calm space for men to talk about pressure, isolation, relationships, fatherhood and the stuff we usually keep quiet.</p>
+        <div class="hero-badge">Fully anonymous by default</div>
+        <h1>Talk freely.<span> Stay unmuted.</span></h1>
+        <p class="subtitle">A calm anonymous space for men to talk about pressure, isolation, relationships, fatherhood and the feelings we usually keep quiet.</p>
         <div class="hero-actions">
-          <button type="button" class="btn btn-lg" onclick="showView('community')">Enter the community →</button>
-          <button type="button" class="btn btn-outline btn-lg" onclick="document.getElementById('how').scrollIntoView()">How it works</button>
-        </div>
-        <div class="trust-row">
-          <div class="trust-item">
-            <div class="icon"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-            No real names needed
-          </div>
-          <div class="trust-item">
-            <div class="icon"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
-            Peer support, not therapy
-          </div>
-          <div class="trust-item">
-            <div class="icon"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
-            Moderated & respectful
-          </div>
+          <button class="btn" onclick="showView('community')">Enter the community →</button>
+          <button class="btn outline" onclick="showView('story')">Our story</button>
         </div>
       </div>
-    </section>
+    </div>
 
-    <section class="topics-section">
+    <div class="section">
       <div class="container">
-        <div class="section-header">
-          <h2 class="section-title">What men are talking about</h2>
-          <p class="section-sub">Pick a topic or just browse. Everything can be fully anonymous.</p>
+        <div class="section-head">
+          <h2>What men are talking about</h2>
+          <p>Pick a topic or browse anonymously.</p>
         </div>
-        <div class="topics-grid" id="home-topics"></div>
+        <div id="topicGrid" class="topic-grid"></div>
       </div>
-    </section>
+    </div>
 
-    <section id="how">
+    <div class="section" style="padding-top: 0;">
       <div class="container">
-        <div class="section-header">
-          <h2 class="section-title">How Unmuted works</h2>
-          <p class="section-sub">Simple, private, and built for men who don’t usually talk.</p>
+        <div class="section-head">
+          <h2>How Unmuted works</h2>
+          <p>Simple, private and built for honest conversations.</p>
         </div>
         <div class="steps">
           <div class="step">
             <div class="step-num">1</div>
-            <h3>Stay fully anonymous</h3>
-            <p>Post with no name at all. We never ask for email or personal details just to join a conversation.</p>
+            <h3>Stay anonymous</h3>
+            <p>Post without sharing your real name or personal details.</p>
           </div>
           <div class="step">
             <div class="step-num">2</div>
-            <h3>Choose your topic</h3>
-            <p>Work pressure, relationships, fatherhood, isolation, anger — pick what fits or start something new.</p>
+            <h3>Pick a topic</h3>
+            <p>Open up about work, fatherhood, relationships, anger, mood or anything else.</p>
           </div>
           <div class="step">
             <div class="step-num">3</div>
-            <h3>Talk like a human</h3>
-            <p>Direct, respectful, no judgement. The space is moderated so it stays useful and safe.</p>
+            <h3>Talk honestly</h3>
+            <p>Respectful support, no judgment, no pressure to be perfect.</p>
           </div>
         </div>
-      </div>
-    </section>
-
-    <section style="padding-top:0;padding-bottom:2rem">
-      <div class="container" style="text-align:center">
-        <button type="button" class="btn btn-lg" onclick="showView('story')" style="margin-bottom:0.5rem">The story behind Unmuted →</button>
-        <br><br>
-        <a href="#donate" class="btn btn-outline btn-lg" onclick="showView('story')">Support the Mission ❤️</a>
-        <p style="color:var(--text-muted);font-size:0.95rem;margin-top:0.75rem">How a 14-year-old’s idea became this community</p>
-      </div>
-    </section>
-
-    <section style="padding-top:0">
-      <div class="container">
-        <div class="safety-banner">
-          <div class="icon-wrap">
-            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          </div>
-          <div>
-            <h3>This is a safe space</h3>
-            <p>Unmuted is peer support — not a crisis service or professional therapy. Moderators are present and the community guidelines are clear.</p>
-            <p>If you are in immediate danger or having thoughts of harming yourself, please contact emergency services or a crisis line right away.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-  </div>
-
-  <!-- ========== STORY / ABOUT VIEW ========== -->
-  <div id="view-story" class="view">
-    <div class="container" style="max-width:740px;padding-top:3rem;padding-bottom:4rem">
-      <button type="button" class="back-link" onclick="showView('home')">← Back to home</button>
-      
-      <div style="margin-bottom:2.5rem">
-        <div class="hero-badge" style="margin-bottom:1.25rem">Our story</div>
-        <h1 style="font-size:clamp(1.9rem,4vw,2.6rem);font-weight:750;letter-spacing:-0.03em;line-height:1.2;margin-bottom:1rem">
-          The Story Behind <span style="color:var(--accent)">Unmuted</span>
-        </h1>
-      </div>
-
-      <div class="post" style="border-left:4px solid var(--accent);padding:2rem 1.75rem;margin-bottom:1.5rem">
-        <p style="font-size:1.1rem;line-height:1.75;margin-bottom:1.25rem;color:var(--text)">
-          Unmuted was founded from a simple but powerful idea by <strong>Matthew Moore</strong>, who came up with the vision at just 14 years old.
-        </p>
-        <p style="font-size:1.05rem;line-height:1.75;margin-bottom:1.25rem;color:var(--text-muted)">
-          After experiencing his own struggles with mental health, Matthew understood how difficult it can be to speak openly about what you’re going through — especially when you feel pressure to stay strong or worry about being judged. He wanted to create something that could help change that.
-        </p>
-        <p style="font-size:1.05rem;line-height:1.75;margin-bottom:1.25rem;color:var(--text-muted)">
-          Unmuted is a community built to remind men and boys that they don’t have to face everything alone, that opening up is a sign of courage, and that their feelings matter.
-        </p>
-        <p style="font-size:1.05rem;line-height:1.75;margin-bottom:1.25rem;color:var(--text-muted)">
-          The anonymous option was created to give people the freedom to share their thoughts and experiences without feeling exposed or judged, helping them take that first step towards speaking out.
-        </p>
-        <p style="font-size:1.05rem;line-height:1.75;margin-bottom:1.25rem;color:var(--text-muted)">
-          Whether someone needs to get something off their chest, share advice, support another person, or simply know that others understand, Unmuted aims to provide a space where every voice matters.
-        </p>
-        <p style="font-size:1.05rem;line-height:1.75;margin-bottom:1.5rem;color:var(--text-muted)">
-          The mission is to break the stigma surrounding men’s mental health, challenge outdated expectations about masculinity, and build a future where no one feels they have to suffer in silence.
-        </p>
-        <p style="font-size:1.15rem;line-height:1.7;font-weight:600;color:var(--text)">
-          Your voice matters. Your story matters. You are never weak for speaking up.
-        </p>
-        <p style="font-size:1.25rem;font-weight:700;color:var(--accent);margin-top:1rem">
-          It’s time to be Unmuted.
-        </p>
-      </div>
-
-      <!-- Support / Donate section (now correctly inside the story view) -->
-      <div id="donate" style="background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:1.75rem;margin:2rem 0;text-align:left">
-        <h3 style="margin-bottom:0.6rem;font-size:1.2rem">Support the Mission</h3>
-        <p style="color:var(--text-muted);font-size:0.98rem;margin-bottom:1.2rem;line-height:1.6">
-          Unmuted is built to help men and boys feel less alone. If you’d like to support the mission, you can donate below. Every contribution helps keep the space running and growing.
-        </p>
-        <a href="#" class="btn btn-lg" style="width:100%;justify-content:center">Donate – All cards accepted</a>
-        <p style="color:var(--text-dim);font-size:0.85rem;margin-top:0.9rem;text-align:center">
-          Secure payments • All major cards accepted
-        </p>
-      </div>
-
-      <div style="text-align:center;margin-top:2rem">
-        <button type="button" class="btn btn-lg" onclick="showView('community')">Join the community →</button>
       </div>
     </div>
-  </div>
+  </section>
 
-  <!-- ========== COMMUNITY VIEW ========== -->
-  <div id="view-community" class="view">
-    <div class="container">
+  <section id="view-story" class="view hide">
+    <div class="container" style="padding-top: 40px; padding-bottom: 60px; max-width: 760px;">
+      <div class="page-header">
+        <h1>The Story Behind <span style="color: var(--accent);">Unmuted</span></h1>
+        <p>Built from lived experience, designed to help men feel less alone.</p>
+      </div>
+      <div class="post op" style="margin-top: 24px;">
+        <div class="post-body">
+          Unmuted was founded from a simple idea: men deserve a place to say the truth without being judged, exposed, or forced to carry everything alone. The anonymous option gives people room to speak honestly before they’re ready to speak publicly.
+          <br><br>
+          This space is for pressure, burnout, loneliness, relationships, anger, grief, fatherhood, anxiety and every part of male life that is too often left unspoken. It is meant to feel calm, respectful and safe.
+          <br><br>
+          Your voice matters. Your story matters. You are not weak for speaking up.
+        </div>
+      </div>
+      <div style="text-align: center; margin-top: 26px;">
+        <button class="btn" onclick="showView('community')">Join the community →</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="view-community" class="view hide">
+    <div class="container" style="padding-top: 36px; padding-bottom: 56px;">
       <div class="page-header">
         <h1>Community</h1>
-        <p>Anonymous conversations. Reply freely. No real names required.</p>
+        <p>Anonymous conversations. No real names required.</p>
       </div>
-      <div class="community-layout">
+      <div class="layout">
         <aside class="sidebar">
           <h3>Topics</h3>
-          <ul class="sidebar-list" id="sidebar-topics"></ul>
+          <ul id="topicList" class="topic-list"></ul>
         </aside>
+
         <div>
-          <div class="feed-header">
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:16px; margin-bottom: 18px; flex-wrap: wrap;">
             <div>
-              <h2 class="section-title" style="margin-bottom:0.25rem" id="feed-title">All conversations</h2>
-              <p class="section-sub" style="margin-bottom:0" id="feed-sub">Anonymous threads from the community</p>
+              <h2 id="feedTitle" style="margin: 0; font-size: 1.8rem; letter-spacing: -0.04em;">All conversations</h2>
+              <div class="small-note" id="feedSub">Anonymous threads from the community</div>
             </div>
-            <button type="button" class="btn" onclick="openNewThread()">+ New conversation</button>
+            <button class="btn" onclick="openNewThread()">+ New conversation</button>
           </div>
-          <div id="thread-list"></div>
+          <div id="threadList" class="thread-list"></div>
         </div>
       </div>
     </div>
-  </div>
+  </section>
 
-  <!-- ========== THREAD DETAIL VIEW ========== -->
-  <div id="view-thread" class="view">
-    <div class="container">
-      <div style="padding-top:2rem;padding-bottom:4rem">
-        <button type="button" class="back-link" onclick="showView('community')">← Back to conversations</button>
-        <div class="thread-detail" id="thread-detail"></div>
-      </div>
+  <section id="view-thread" class="view hide">
+    <div class="container" style="padding-top: 30px; padding-bottom: 50px;">
+      <button class="btn outline" onclick="showView('community')" style="margin-bottom: 18px;">← Back to conversations</button>
+      <div id="threadDetail" class="thread-detail"></div>
     </div>
+  </section>
+
+  <div class="crisis">
+    <strong>In crisis?</strong> Please reach out for immediate help — <a href="https://www.iasp.info/suicidalthoughts/" target="_blank" rel="noopener">International Association for Suicide Prevention</a>
   </div>
 
-  <!-- CRISIS + FOOTER -->
-  <div class="crisis">
-    <strong>In crisis?</strong> Please reach out for immediate help —
-    <a href="https://www.iasp.info/suicidalthoughts/" target="_blank" rel="noopener">International Association for Suicide Prevention</a>
-    or your local emergency number.
-  </div>
-  <footer>
+  <footer class="footer">
     <div class="container footer-inner">
-      <div>
-        <strong style="color:var(--text)">Unmuted</strong> — Anonymous conversations for men.<br>
-        Peer support community. Not a substitute for professional care.
-      </div>
-      <div>
-        <button type="button" class="link" style="background:none;border:none;color:var(--accent);cursor:pointer;font-family:inherit" onclick="showView('home')">Home</button> ·
-        <button type="button" class="link" style="background:none;border:none;color:var(--accent);cursor:pointer;font-family:inherit" onclick="showView('community')">Community</button> ·
-        <button type="button" class="link" style="background:none;border:none;color:var(--accent);cursor:pointer;font-family:inherit" onclick="showView('story')">Our Story</button>
-      </div>
+      <div><strong style="color: var(--text);">Unmuted</strong> — anonymous conversations for men.</div>
+      <div>Peer support community. Not a substitute for professional care.</div>
     </div>
   </footer>
 
-  <!-- NEW CONVERSATION MODAL -->
-  <div class="modal-overlay" id="new-thread-modal">
-    <div class="modal">
-      <h2>Start a conversation</h2>
-      <div class="form-group">
+  <div id="newThreadModal" class="modal" aria-hidden="true">
+    <div class="modal-card">
+      <h2 style="margin-top: 0; margin-bottom: 18px;">Start a conversation</h2>
+
+      <div class="field">
         <label>Topic</label>
-        <select id="new-topic">
+        <select id="newTopic">
           <option value="work">Work & Pressure</option>
           <option value="relationships">Relationships</option>
           <option value="fatherhood">Fatherhood</option>
@@ -544,263 +253,357 @@
           <option value="general">General / Other</option>
         </select>
       </div>
-      <div class="form-group">
+
+      <div class="field">
         <label>Title</label>
-        <input type="text" id="new-title" placeholder="What’s on your mind?" maxlength="120" />
+        <input id="newTitle" type="text" placeholder="What’s on your mind?" maxlength="120" />
       </div>
-      <div class="form-group">
+
+      <div class="field">
         <label>Your message</label>
-        <textarea id="new-body" rows="5" placeholder="Share as much or as little as you want."></textarea>
+        <textarea id="newBody" placeholder="Share as much or as little as you want."></textarea>
       </div>
-      <div class="form-group">
+
+      <div class="field">
         <label>How do you want to appear?</label>
-        <label class="anon-option">
-          <input type="radio" name="identity" value="anonymous" checked onchange="toggleNickname()" />
-          <div><strong>Fully anonymous</strong><br><span>No name shown. Just “Anonymous”.</span></div>
-        </label>
-        <label class="anon-option">
-          <input type="radio" name="identity" value="nickname" onchange="toggleNickname()" />
-          <div><strong>Use a nickname</strong><br><span>Optional. Still not your real name.</span></div>
-        </label>
-        <div id="nickname-field" class="hidden" style="margin-top:0.75rem">
-          <input type="text" id="new-name" placeholder="Choose a nickname" maxlength="24" />
+        <div class="radio-box">
+          <input type="radio" name="identity" value="anonymous" checked />
+          <div><strong>Fully anonymous</strong><br><span class="small-note">No name shown.</span></div>
+        </div>
+        <div class="radio-box">
+          <input type="radio" name="identity" value="nickname" />
+          <div><strong>Use a nickname</strong><br><span class="small-note">Optional, not your real name.</span></div>
+        </div>
+        <div id="nicknameField" class="hide" style="margin-top:12px;">
+          <input id="newName" type="text" maxlength="24" placeholder="Choose a nickname" />
         </div>
       </div>
-      <p class="anon-note">Your real identity is never shown. Posts are moderated.</p>
+
       <div class="modal-actions">
-        <button type="button" class="btn btn-outline" onclick="closeNewThread()">Cancel</button>
-        <button type="button" class="btn" onclick="submitNewThread()">Post</button>
+        <button class="btn outline" onclick="closeNewThread()">Cancel</button>
+        <button class="btn" onclick="submitNewThread()">Post</button>
       </div>
     </div>
   </div>
 
   <script>
-    const topics = [
-      { id: "work", name: "Work & Pressure", icon: "💼", desc: "Deadlines, burnout, career doubts", count: 128 },
-      { id: "relationships", name: "Relationships", icon: "🤝", desc: "Partners, family, friendships", count: 94 },
-      { id: "fatherhood", name: "Fatherhood", icon: "👨‍👧", desc: "Being a dad, balance, worry", count: 67 },
-      { id: "isolation", name: "Isolation & Loneliness", icon: "🌙", desc: "Feeling cut off or alone", count: 112 },
-      { id: "anger", name: "Anger & Frustration", icon: "🔥", desc: "Managing temper and stress", count: 53 },
-      { id: "mental", name: "Low Mood & Anxiety", icon: "🧠", desc: "Depression, worry, overthinking", count: 141 },
-      { id: "general", name: "General / Other", icon: "💬", desc: "Anything else on your mind", count: 89 }
-    ];
+    const SUPABASE_URL = 'https://ozeokntcuukgbboiteon.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZW9rbnRjdXVrYmdib2l0ZW9uIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI5NDUxNjgsImV4cCI6MjEwODUyMTE2OH0._1SJT-Hnb1WMqfBpejRCDwtlIIou6_o9cfxSbch0XXM';
+    const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
 
-    let threads = [
-      { id:1, topic:"work", title:"Anyone else feeling like they’re failing at work but can’t talk about it?", body:"I’ve been in the same job for 6 years. Lately I just feel like I’m coasting and everyone else is moving forward. Don’t want to sound weak to mates or family. Just curious if other blokes feel this.", author:"Quiet_42", time:"2 hours ago", replies:3, views:89,
-        posts:[
-          {author:"Quiet_42", time:"2 hours ago", body:"I’ve been in the same job for 6 years. Lately I just feel like I’m coasting and everyone else is moving forward. Don’t want to sound weak to mates or family. Just curious if other blokes feel this."},
-          {author:"Mate_from_Oz", time:"1 hour ago", body:"Mate, you’re not alone. I felt exactly the same at the 5-year mark. Ended up talking to a mate who said the same thing. Sometimes just admitting it out loud takes the pressure off."},
-          {author:"Anonymous", time:"45 min ago", body:"Same boat. Started writing a few notes to myself about what I actually enjoy in the job. Helped a bit. Still figuring it out though."},
-          {author:"Anonymous", time:"20 min ago", body:"I’ve been there. Talking about it here already feels better than bottling it."}
-        ]},
-      { id:2, topic:"isolation", title:"Moved cities for work. Don’t know how to make friends as an adult.", body:"37, new city, know almost no one. Weekends feel long. Not big on pubs. Any practical tips that actually worked for you?", author:"NewTown", time:"5 hours ago", replies:2, views:156,
-        posts:[
-          {author:"NewTown", time:"5 hours ago", body:"37, new city, know almost no one. Weekends feel long. Not big on pubs. Any practical tips that actually worked for you?"},
-          {author:"TrailRunner", time:"4 hours ago", body:"Joined a local running group. Zero pressure to chat at first, but after a few weeks conversations started naturally. Sports or hobby groups beat forced networking."},
-          {author:"Anonymous", time:"3 hours ago", body:"Same age, same problem two years ago. What helped me was volunteering once a month. Felt useful and met a couple of decent people."}
-        ]},
-      { id:3, topic:"fatherhood", title:"Scared I’m not present enough with the kids", body:"Work is demanding and by the time I’m home I’m drained. I love them but I can feel myself being short. Anyone managed to turn this around without quitting their job?", author:"Dad_Trying", time:"1 day ago", replies:1, views:210,
-        posts:[
-          {author:"Dad_Trying", time:"1 day ago", body:"Work is demanding and by the time I’m home I’m drained. I love them but I can feel myself being short. Anyone managed to turn this around without quitting their job?"},
-          {author:"TwoKids", time:"20 hours ago", body:"I started protecting the first 30 minutes after I walk in the door. Phone stays in the bag. Just sits on the floor with them. Small change but it shifted the whole evening."}
-        ]},
-      { id:4, topic:"mental", title:"Low for months and tired of pretending I’m fine", body:"Not in crisis, just flat. Going through the motions. Hard to tell anyone offline. Looking for others who’ve been in this spot and found ways to slowly climb out.", author:"Anonymous", time:"3 hours ago", replies:1, views:97,
-        posts:[
-          {author:"Anonymous", time:"3 hours ago", body:"Not in crisis, just flat. Going through the motions. Hard to tell anyone offline. Looking for others who’ve been in this spot and found ways to slowly climb out."},
-          {author:"Steady_Progress", time:"2 hours ago", body:"Been there. What helped me was tiny consistent things — 10 min walk most days, talking here, and eventually one conversation with a GP. No magic fix, just slow steps."}
-        ]},
-      { id:5, topic:"anger", title:"Snapping at people more than I used to", body:"Small things set me off lately. I hate it. Looking for practical ways other men have cooled the fuse without just bottling everything.", author:"Cooling_Off", time:"8 hours ago", replies:0, views:64,
-        posts:[{author:"Cooling_Off", time:"8 hours ago", body:"Small things set me off lately. I hate it. Looking for practical ways other men have cooled the fuse without just bottling everything."}]},
-      { id:6, topic:"relationships", title:"How do you tell your partner you’re struggling without dumping everything on them?", body:"I don’t want to make her worry or feel responsible. But keeping it all in isn’t working either. Any approaches that landed well?", author:"Trying_to_Talk", time:"12 hours ago", replies:0, views:112,
-        posts:[{author:"Trying_to_Talk", time:"12 hours ago", body:"I don’t want to make her worry or feel responsible. But keeping it all in isn’t working either. Any approaches that landed well?"}]}
-    ];
+    const topicMeta = {
+      work: { name: 'Work & Pressure', icon: '💼', desc: 'Deadlines, burnout, career doubts' },
+      relationships: { name: 'Relationships', icon: '🤝', desc: 'Partners, family, friendships' },
+      fatherhood: { name: 'Fatherhood', icon: '👨‍👧', desc: 'Being a dad, balance and worry' },
+      isolation: { name: 'Isolation & Loneliness', icon: '🌙', desc: 'Feeling cut off or alone' },
+      anger: { name: 'Anger & Frustration', icon: '🔥', desc: 'Managing temper and stress' },
+      mental: { name: 'Low Mood & Anxiety', icon: '🧠', desc: 'Depression, worrying and overthinking' },
+      general: { name: 'General / Other', icon: '💬', desc: 'Anything else on your mind' }
+    };
 
-    let currentTopic = "all";
+    let threads = [];
+    let currentTopic = 'all';
     let currentThreadId = null;
 
+    function normalizeThread(row) {
+      const posts = Array.isArray(row.posts) ? row.posts : [{ author: row.author || 'Anonymous', time: row.time || 'Just now', body: row.body || '' }];
+      return {
+        id: row.id,
+        topic: row.topic || 'general',
+        title: row.title || 'Untitled',
+        body: row.body || '',
+        author: row.author || 'Anonymous',
+        time: row.time || 'Just now',
+        replies: Number(row.replies || (posts.length - 1)),
+        views: Number(row.views || 1),
+        posts
+      };
+    }
+
     function showView(name) {
-      const viewName = name.startsWith("view-") ? name : "view-" + name;
+      const viewName = name.startsWith('view-') ? name : `view-${name}`;
+      document.querySelectorAll('.view').forEach(v => v.classList.add('hide'));
       const target = document.getElementById(viewName);
-
-      document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
-      if (target) target.classList.add("active");
-
-      window.scrollTo({ top: 0, behavior: "auto" });
-
-      if (name === "community") {
-        renderSidebar();
-        renderThreadList();
-      }
-      if (name === "home") renderHomeTopics();
-      if (name === "story") {
-        if (location.hash === "#donate") {
-          setTimeout(() => document.getElementById("donate")?.scrollIntoView({behavior:"smooth"}), 50);
-        }
-      }
+      if (target) target.classList.remove('hide');
     }
 
-    function renderHomeTopics() {
-      document.getElementById("home-topics").innerHTML = topics.map(t => `
-        <button type="button" class="topic-card" onclick="filterTopic('${t.id}')">
-          <div class="topic-icon">${t.icon}</div>
-          <h3>${t.name}</h3>
-          <p>${t.desc}</p>
-          <div class="topic-count">${t.count} conversations</div>
+    function renderTopicGrid() {
+      const entries = Object.entries(topicMeta).map(([key, value]) => `
+        <button class="topic-card" onclick="filterTopic('${key}')">
+          <div class="topic-icon">${value.icon}</div>
+          <h3>${value.name}</h3>
+          <p>${value.desc}</p>
         </button>
-      `).join("");
+      `).join('');
+      document.getElementById('topicGrid').innerHTML = entries;
     }
 
-    function renderSidebar() {
-      document.getElementById("sidebar-topics").innerHTML = `
-        <li><a href="#" class="${currentTopic==='all'?'active':''}" onclick="filterTopic('all');return false">All topics</a></li>
-        ${topics.map(t => `<li><a href="#" class="${currentTopic===t.id?'active':''}" onclick="filterTopic('${t.id}');return false">${t.name}</a></li>`).join("")}
-      `;
+    function renderTopicList() {
+      const list = [`<li><button class="${currentTopic === 'all' ? 'active' : ''}" onclick="filterTopic('all')">All topics</button></li>`];
+      Object.entries(topicMeta).forEach(([key, value]) => {
+        list.push(`<li><button class="${currentTopic === key ? 'active' : ''}" onclick="filterTopic('${key}')">${value.name}</button></li>`);
+      });
+      document.getElementById('topicList').innerHTML = list.join('');
     }
 
-    function renderThreadList() {
-      const container = document.getElementById("thread-list");
-      let list = currentTopic === "all" ? threads : threads.filter(t => t.topic === currentTopic);
-      if (list.length === 0) {
-        container.innerHTML = `<div class="post"><p style="color:var(--text-muted)">No conversations in this topic yet. Be the first.</p></div>`;
-        return;
-      }
-      container.innerHTML = list.map(t => {
-        const topicName = topics.find(x => x.id === t.topic)?.name || t.topic;
+    function renderThreads() {
+      const list = currentTopic === 'all' ? threads : threads.filter(t => t.topic === currentTopic);
+      const html = list.length ? list.map(thread => {
+        const meta = topicMeta[thread.topic] || topicMeta.general;
         return `
-          <div class="thread" onclick="openThread(${t.id})">
-            <div class="thread-meta">
-              <span class="username">${t.author}</span><span>·</span><span>${topicName}</span><span>·</span><span>${t.time}</span>
+          <div class="thread" onclick="openThread(${thread.id})">
+            <div class="meta">
+              <span class="author">${thread.author}</span>
+              <span>·</span>
+              <span>${meta.name}</span>
+              <span>·</span>
+              <span>${thread.time}</span>
             </div>
-            <h3>${t.title}</h3>
-            <p>${t.body}</p>
-            <div class="thread-stats">
-              <span>${t.replies} ${t.replies===1?'reply':'replies'}</span>
-              <span>${t.views} views</span>
+            <h3>${thread.title}</h3>
+            <p>${thread.body}</p>
+            <div class="stats">
+              <span>${thread.replies} ${thread.replies === 1 ? 'reply' : 'replies'}</span>
+              <span>${thread.views} views</span>
             </div>
-          </div>`;
-      }).join("");
+          </div>
+        `;
+      }).join('') : '<div class="post"><div class="post-body">No conversations in this topic yet. Be the first.</div></div>';
+
+      document.getElementById('threadList').innerHTML = html;
+      document.getElementById('feedTitle').textContent = currentTopic === 'all' ? 'All conversations' : (topicMeta[currentTopic]?.name || 'Conversations');
+      document.getElementById('feedSub').textContent = currentTopic === 'all' ? 'Anonymous threads from the community' : 'Conversations in this topic';
+      renderTopicList();
     }
 
-    function filterTopic(id) {
-      currentTopic = id;
-      const title = id === "all" ? "All conversations" : (topics.find(t => t.id === id)?.name || id);
-      document.getElementById("feed-title").textContent = title;
-      document.getElementById("feed-sub").textContent = id === "all" ? "Anonymous threads from the community" : "Conversations in this topic";
-      renderSidebar();
-      renderThreadList();
-      showView("community");
+    function filterTopic(topic) {
+      currentTopic = topic;
+      renderThreads();
+      showView('community');
+    }
+
+    function openNewThread() {
+      document.getElementById('newThreadModal').classList.add('open');
+    }
+
+    function closeNewThread() {
+      document.getElementById('newThreadModal').classList.remove('open');
+    }
+
+    function toggleNickname() {
+      const nicknameField = document.getElementById('nicknameField');
+      nicknameField.classList.toggle('hide', document.querySelector('input[name="identity"]:checked').value !== 'nickname');
     }
 
     function openThread(id) {
       currentThreadId = id;
       const thread = threads.find(t => t.id === id);
       if (!thread) return;
-      const topicName = topics.find(x => x.id === thread.topic)?.name || thread.topic;
-      document.getElementById("thread-detail").innerHTML = `
+      const topic = topicMeta[thread.topic] || topicMeta.general;
+      const replies = (thread.posts || []).slice(1).map(p => `
+        <div class="post">
+          <div class="post-header">
+            <span class="author" style="color: var(--accent); font-weight: 700;">${p.author}</span>
+            <span class="small-note">${p.time}</span>
+          </div>
+          <div class="post-body">${p.body}</div>
+        </div>
+      `).join('');
+
+      document.getElementById('threadDetail').innerHTML = `
         <div class="post op">
           <div class="post-header">
-            <div>
-              <span class="username">${thread.author}</span>
-              <span style="color:var(--text-muted);font-size:0.85rem;margin-left:0.5rem">${thread.time} · ${topicName}</span>
+            <div class="meta">
+              <span class="author">${thread.author}</span>
+              <span>·</span>
+              <span>${topic.name}</span>
+              <span>·</span>
+              <span>${thread.time}</span>
             </div>
           </div>
-          <h2 style="font-size:1.4rem;margin-bottom:0.85rem;letter-spacing:-0.02em">${thread.title}</h2>
+          <h2 style="margin: 0 0 10px; font-size: 1.5rem; letter-spacing: -0.03em;">${thread.title}</h2>
           <div class="post-body">${thread.body}</div>
         </div>
-        <h3 style="margin:1.75rem 0 1rem;font-size:1.1rem">${thread.posts.length-1} ${thread.posts.length-1===1?'reply':'replies'}</h3>
-        ${thread.posts.slice(1).map(p => `
-          <div class="post">
-            <div class="post-header">
-              <span class="username">${p.author}</span>
-              <span style="color:var(--text-muted);font-size:0.85rem">${p.time}</span>
-            </div>
-            <div class="post-body">${p.body}</div>
-          </div>`).join("")}
+        <div class="small-note" style="margin: 18px 0 12px;">${(thread.posts || []).length - 1} ${(thread.posts || []).length - 1 === 1 ? 'reply' : 'replies'}</div>
+        ${replies}
         <div class="reply-form">
-          <h3 style="font-size:1.05rem;margin-bottom:1rem">Write a reply</h3>
-          <div class="form-group">
+          <h3 style="margin-top: 0; margin-bottom: 14px;">Write a reply</h3>
+          <div class="field">
             <label>How do you want to appear?</label>
-            <label class="anon-option">
-              <input type="radio" name="reply-identity" value="anonymous" checked onchange="toggleReplyNickname()" />
-              <div><strong>Fully anonymous</strong><br><span>No name shown</span></div>
-            </label>
-            <label class="anon-option">
-              <input type="radio" name="reply-identity" value="nickname" onchange="toggleReplyNickname()" />
-              <div><strong>Use a nickname</strong><br><span>Optional</span></div>
-            </label>
-            <div id="reply-nickname-field" class="hidden" style="margin-top:0.75rem">
-              <input type="text" id="reply-name" placeholder="Choose a nickname" maxlength="24" />
+            <div class="radio-box">
+              <input type="radio" name="replyIdentity" value="anonymous" checked />
+              <div><strong>Fully anonymous</strong><br><span class="small-note">No name shown.</span></div>
+            </div>
+            <div class="radio-box">
+              <input type="radio" name="replyIdentity" value="nickname" />
+              <div><strong>Use a nickname</strong><br><span class="small-note">Optional, not your real name.</span></div>
+            </div>
+            <div id="replyNickField" class="hide" style="margin-top: 12px;">
+              <input id="replyName" type="text" maxlength="24" placeholder="Choose a nickname" />
             </div>
           </div>
-          <div class="form-group">
-            <textarea id="reply-body" placeholder="Write your reply…"></textarea>
+          <div class="field">
+            <textarea id="replyBody" placeholder="Write your reply…"></textarea>
           </div>
-          <div class="form-row">
-            <span class="anon-note">Your real identity is never shown.</span>
-            <button type="button" class="btn" onclick="submitReply()">Post reply</button>
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+            <span class="small-note">Your real identity is never shown.</span>
+            <button class="btn" onclick="submitReply()">Post reply</button>
           </div>
-        </div>`;
-      showView("thread");
+        </div>
+      `;
+      showView('thread');
     }
 
-    function openNewThread() { document.getElementById("new-thread-modal").classList.add("open"); }
-    function closeNewThread() { document.getElementById("new-thread-modal").classList.remove("open"); }
-    function toggleNickname() {
-      const isNick = document.querySelector('input[name="identity"]:checked').value === "nickname";
-      document.getElementById("nickname-field").classList.toggle("hidden", !isNick);
-    }
-    function toggleReplyNickname() {
-      const isNick = document.querySelector('input[name="reply-identity"]:checked').value === "nickname";
-      document.getElementById("reply-nickname-field").classList.toggle("hidden", !isNick);
+    function seedData() {
+      return [
+        {
+          id: 1,
+          topic: 'work',
+          title: 'Anyone else feeling like they’re failing at work but can’t talk about it?',
+          body: 'I’ve been in the same job for 6 years. Lately it feels like I’m just coasting while everyone else is moving forward.',
+          author: 'Anonymous',
+          time: '2 hours ago',
+          replies: 2,
+          views: 18,
+          posts: [
+            { author: 'Anonymous', time: '2 hours ago', body: 'I’ve been in the same job for 6 years. Lately it feels like I’m just coasting while everyone else is moving forward.' },
+            { author: 'Mate_from_Oz', time: '1 hour ago', body: 'You’re not alone. I felt the same at the five-year mark. Talking about it helps more than I expected.' },
+            { author: 'Quiet_42', time: '40 min ago', body: 'Same boat. I started writing down what I actually enjoy in the job and that helped me refocus.' }
+          ]
+        },
+        {
+          id: 2,
+          topic: 'isolation',
+          title: 'Moved cities for work. Don’t know how to make friends as an adult.',
+          body: 'New city, no mates, weekends feel long. Not really a pub person. Any practical tips?',
+          author: 'Anonymous',
+          time: '5 hours ago',
+          replies: 2,
+          views: 24,
+          posts: [
+            { author: 'Anonymous', time: '5 hours ago', body: 'New city, no mates, weekends feel long. Not really a pub person. Any practical tips?' },
+            { author: 'TrailRunner', time: '4 hours ago', body: 'Joined a local running club. Zero pressure at first, then conversations started naturally.' },
+            { author: 'NewTown', time: '3 hours ago', body: 'Volunteering once a month helped me. It felt useful and got me around other men without forcing it.' }
+          ]
+        }
+      ];
     }
 
-    function submitNewThread() {
-      const topic = document.getElementById("new-topic").value;
-      const title = document.getElementById("new-title").value.trim();
-      const body = document.getElementById("new-body").value.trim();
+    async function loadThreads() {
+      if (!supabase) {
+        threads = seedData();
+        renderThreads();
+        return;
+      }
+
+      try {
+        const { data, error } = await supabase.from('threads').select('*').order('created_at', { ascending: false });
+        if (error) throw error;
+        threads = (data && data.length ? data : seedData()).map(normalizeThread);
+        renderThreads();
+      } catch (error) {
+        console.warn('Supabase load failed. Using seeded data instead.', error);
+        threads = seedData();
+        renderThreads();
+      }
+    }
+
+    async function submitNewThread() {
+      const title = document.getElementById('newTitle').value.trim();
+      const body = document.getElementById('newBody').value.trim();
+      const topic = document.getElementById('newTopic').value;
       const identity = document.querySelector('input[name="identity"]:checked').value;
-      let author = "Anonymous";
-      if (identity === "nickname") {
-        const name = document.getElementById("new-name").value.trim();
-        if (name) author = name;
+      const author = identity === 'nickname' ? document.getElementById('newName').value.trim() || 'Anonymous' : 'Anonymous';
+
+      if (!title || !body) {
+        alert('Please add a title and message.');
+        return;
       }
-      if (!title || !body) { alert("Please add a title and message."); return; }
-      const newId = Date.now();
-      threads.unshift({
-        id: newId, topic, title, body, author, time: "Just now", replies: 0, views: 1,
-        posts: [{ author, time: "Just now", body }]
-      });
-      closeNewThread();
-      document.getElementById("new-title").value = "";
-      document.getElementById("new-body").value = "";
-      document.getElementById("new-name").value = "";
-      document.querySelector('input[name="identity"][value="anonymous"]').checked = true;
-      toggleNickname();
-      filterTopic(topic);
-      openThread(newId);
+
+      const payload = {
+        topic,
+        title,
+        body,
+        author,
+        time: 'Just now',
+        replies: 0,
+        views: 1,
+        posts: [{ author, time: 'Just now', body }]
+      };
+
+      if (!supabase) {
+        threads.unshift({ id: Date.now(), ...payload, posts: payload.posts });
+        closeNewThread();
+        filterTopic(topic);
+        openThread(threads[0].id);
+        return;
+      }
+
+      try {
+        const { data, error } = await supabase.from('threads').insert(payload).select().single();
+        if (error) throw error;
+        threads = [normalizeThread(data), ...threads.filter(t => t.id !== data.id)];
+        closeNewThread();
+        filterTopic(topic);
+        openThread(data.id);
+      } catch (error) {
+        console.error('Create failed:', error);
+        alert('Could not create the post. Check your Supabase table and permissions.');
+      }
     }
 
-    function submitReply() {
-      const body = document.getElementById("reply-body").value.trim();
-      if (!body) { alert("Write something first."); return; }
-      const identity = document.querySelector('input[name="reply-identity"]:checked').value;
-      let author = "Anonymous";
-      if (identity === "nickname") {
-        const name = document.getElementById("reply-name").value.trim();
-        if (name) author = name;
+    async function submitReply() {
+      const body = document.getElementById('replyBody').value.trim();
+      if (!body) {
+        alert('Write something first.');
+        return;
       }
+
+      const identity = document.querySelector('input[name="replyIdentity"]:checked').value;
+      const author = identity === 'nickname' ? document.getElementById('replyName').value.trim() || 'Anonymous' : 'Anonymous';
       const thread = threads.find(t => t.id === currentThreadId);
       if (!thread) return;
-      thread.posts.push({ author, time: "Just now", body });
-      thread.replies = thread.posts.length - 1;
-      openThread(currentThreadId);
+
+      const updatedPosts = [...(thread.posts || []), { author, time: 'Just now', body }];
+      const nextReplyCount = updatedPosts.length - 1;
+
+      if (!supabase) {
+        thread.posts = updatedPosts;
+        thread.replies = nextReplyCount;
+        openThread(currentThreadId);
+        return;
+      }
+
+      try {
+        const { error } = await supabase.from('threads').update({
+          posts: updatedPosts,
+          replies: nextReplyCount,
+          time: 'Just now'
+        }).eq('id', currentThreadId);
+
+        if (error) throw error;
+
+        thread.posts = updatedPosts;
+        thread.replies = nextReplyCount;
+        openThread(currentThreadId);
+      } catch (error) {
+        console.error('Reply failed:', error);
+        alert('Reply could not be saved. Check your Supabase table and permissions.');
+      }
     }
 
-    document.getElementById("new-thread-modal").addEventListener("click", function(e) {
-      if (e.target === this) closeNewThread();
+    document.getElementById('newThreadModal').addEventListener('click', function (event) {
+      if (event.target === this) closeNewThread();
     });
+    document.querySelectorAll('input[name="identity"]').forEach el => el.addEventListener('change', toggleNickname);
+    document.querySelectorAll('input[name="replyIdentity"]').forEach(el => el.addEventListener('change', () => {
+      const isNick = document.querySelector('input[name="replyIdentity"]:checked').value === 'nickname';
+      document.getElementById('replyNickField').classList.toggle('hide', !isNick);
+    }));
 
-    renderHomeTopics();
+    renderTopicGrid();
+    renderThreads();
+    showView('home');
+    loadThreads();
   </script>
 </body>
 </html>
