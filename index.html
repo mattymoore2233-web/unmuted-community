@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Unmuted — Anonymous conversations for men</title>
   <meta name="description" content="A calm, anonymous space for men to talk about mental health, pressure, relationships and life. No names required." />
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --bg: #0b1120;
@@ -300,31 +299,12 @@
     .view.active { display: block; }
     .hidden { display: none !important; }
 
-    .loading {
-      text-align: center; padding: 2rem; color: var(--text-muted);
+    @media (max-width: 640px) {
+      .nav-links a:not(.btn), .nav-links button.link:not(.btn) { display: none; }
+      .hero { padding: 4rem 0 3.5rem; }
+      .page-header { padding-top: 2.25rem; }
+      .safety-banner { flex-direction: column; gap: 1rem; }
     }
-
-  
-@media (max-width: 640px) {
-  .nav-links a:not(.btn),
-  .nav-links button.link:not(.btn) {
-    display: inline-block;
-  }
-
-  .hero {
-    padding: 4rem 0 3.5rem;
-  }
-
-  .page-header {
-    padding-top: 2.25rem;
-  }
-
-  .safety-banner {
-    flex-direction: column;
-    gap: 1rem;}}
-
-      
-    
   </style>
 </head>
 <body>
@@ -334,10 +314,10 @@
     <div class="nav-inner">
       <div class="logo" onclick="showView('home')">Unmuted<span>.</span></div>
       <div class="nav-links">
-        <button class="link" onclick="showView('community')">Community</button>
-        <button class="link" onclick="showView('story')">Our Story</button>
-        <button class="link" onclick="showView('home'); setTimeout(()=>document.getElementById('how').scrollIntoView(),100)">How it works</button>
-        <button class="btn btn-sm" onclick="openNewThread()">Start talking</button>
+        <button type="button" class="link" onclick="showView('community')">Community</button>
+        <button type="button" class="link" onclick="showView('story')">Our Story</button>
+        <button type="button" class="link" onclick="showView('home'); setTimeout(()=>document.getElementById('how').scrollIntoView(),100)">How it works</button>
+        <button type="button" class="btn btn-sm" onclick="openNewThread()">Start talking</button>
       </div>
     </div>
   </nav>
@@ -354,8 +334,8 @@
         <h1>Talk freely.<br><span>Stay unmuted.</span></h1>
         <p>A calm space for men to talk about pressure, isolation, relationships, fatherhood and the stuff we usually keep quiet.</p>
         <div class="hero-actions">
-          <button class="btn btn-lg" onclick="showView('community')">Enter the community →</button>
-          <button class="btn btn-outline btn-lg" onclick="document.getElementById('how').scrollIntoView()">How it works</button>
+          <button type="button" class="btn btn-lg" onclick="showView('community')">Enter the community →</button>
+          <button type="button" class="btn btn-outline btn-lg" onclick="document.getElementById('how').scrollIntoView()">How it works</button>
         </div>
         <div class="trust-row">
           <div class="trust-item">
@@ -412,7 +392,7 @@
 
     <section style="padding-top:0;padding-bottom:2rem">
       <div class="container" style="text-align:center">
-        <button class="btn btn-lg" onclick="showView('story')" style="margin-bottom:0.5rem">The story behind Unmuted →</button>
+        <button type="button" class="btn btn-lg" onclick="showView('story')" style="margin-bottom:0.5rem">The story behind Unmuted →</button>
         <br><br>
         <a href="#donate" class="btn btn-outline btn-lg" onclick="showView('story')">Support the Mission ❤️</a>
         <p style="color:var(--text-muted);font-size:0.95rem;margin-top:0.75rem">How a 14-year-old’s idea became this community</p>
@@ -438,7 +418,7 @@
   <!-- ========== STORY / ABOUT VIEW ========== -->
   <div id="view-story" class="view">
     <div class="container" style="max-width:740px;padding-top:3rem;padding-bottom:4rem">
-      <button class="back-link" onclick="showView('home')">← Back to home</button>
+      <button type="button" class="back-link" onclick="showView('home')">← Back to home</button>
       
       <div style="margin-bottom:2.5rem">
         <div class="hero-badge" style="margin-bottom:1.25rem">Our story</div>
@@ -474,6 +454,7 @@
         </p>
       </div>
 
+      <!-- Support / Donate section (now correctly inside the story view) -->
       <div id="donate" style="background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:1.75rem;margin:2rem 0;text-align:left">
         <h3 style="margin-bottom:0.6rem;font-size:1.2rem">Support the Mission</h3>
         <p style="color:var(--text-muted);font-size:0.98rem;margin-bottom:1.2rem;line-height:1.6">
@@ -486,7 +467,7 @@
       </div>
 
       <div style="text-align:center;margin-top:2rem">
-        <button class="btn btn-lg" onclick="showView('community')">Join the community →</button>
+        <button type="button" class="btn btn-lg" onclick="showView('community')">Join the community →</button>
       </div>
     </div>
   </div>
@@ -509,9 +490,9 @@
               <h2 class="section-title" style="margin-bottom:0.25rem" id="feed-title">All conversations</h2>
               <p class="section-sub" style="margin-bottom:0" id="feed-sub">Anonymous threads from the community</p>
             </div>
-            <button class="btn" onclick="openNewThread()">+ New conversation</button>
+            <button type="button" class="btn" onclick="openNewThread()">+ New conversation</button>
           </div>
-          <div id="thread-list"><div class="loading">Loading conversations…</div></div>
+          <div id="thread-list"></div>
         </div>
       </div>
     </div>
@@ -521,7 +502,7 @@
   <div id="view-thread" class="view">
     <div class="container">
       <div style="padding-top:2rem;padding-bottom:4rem">
-        <button class="back-link" onclick="showView('community')">← Back to conversations</button>
+        <button type="button" class="back-link" onclick="showView('community')">← Back to conversations</button>
         <div class="thread-detail" id="thread-detail"></div>
       </div>
     </div>
@@ -540,9 +521,9 @@
         Peer support community. Not a substitute for professional care.
       </div>
       <div>
-        <button class="link" style="background:none;border:none;color:var(--accent);cursor:pointer;font-family:inherit" onclick="showView('home')">Home</button> ·
-        <button class="link" style="background:none;border:none;color:var(--accent);cursor:pointer;font-family:inherit" onclick="showView('community')">Community</button> ·
-        <button class="link" style="background:none;border:none;color:var(--accent);cursor:pointer;font-family:inherit" onclick="showView('story')">Our Story</button>
+        <button type="button" class="link" style="background:none;border:none;color:var(--accent);cursor:pointer;font-family:inherit" onclick="showView('home')">Home</button> ·
+        <button type="button" class="link" style="background:none;border:none;color:var(--accent);cursor:pointer;font-family:inherit" onclick="showView('community')">Community</button> ·
+        <button type="button" class="link" style="background:none;border:none;color:var(--accent);cursor:pointer;font-family:inherit" onclick="showView('story')">Our Story</button>
       </div>
     </div>
   </footer>
@@ -587,96 +568,84 @@
       </div>
       <p class="anon-note">Your real identity is never shown. Posts are moderated.</p>
       <div class="modal-actions">
-        <button class="btn btn-outline" onclick="closeNewThread()">Cancel</button>
-        <button class="btn" onclick="submitNewThread()">Post</button>
+        <button type="button" class="btn btn-outline" onclick="closeNewThread()">Cancel</button>
+        <button type="button" class="btn" onclick="submitNewThread()">Post</button>
       </div>
     </div>
   </div>
 
   <script>
-    // ===== SUPABASE SETUP =====
-    const SUPABASE_URL = 'https://mlosmraymgiaydfpdokr.supabase.co';
-    const SUPABASE_KEY = 'sb_publishable_A7E0CrgIggkHTpOfzDEjIg_duJfaSdl';
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
     const topics = [
-      { id: "work", name: "Work & Pressure", icon: "💼", desc: "Deadlines, burnout, career doubts", count: 0 },
-      { id: "relationships", name: "Relationships", icon: "🤝", desc: "Partners, family, friendships", count: 0 },
-      { id: "fatherhood", name: "Fatherhood", icon: "👨‍👧", desc: "Being a dad, balance, worry", count: 0 },
-      { id: "isolation", name: "Isolation & Loneliness", icon: "🌙", desc: "Feeling cut off or alone", count: 0 },
-      { id: "anger", name: "Anger & Frustration", icon: "🔥", desc: "Managing temper and stress", count: 0 },
-      { id: "mental", name: "Low Mood & Anxiety", icon: "🧠", desc: "Depression, worry, overthinking", count: 0 },
-      { id: "general", name: "General / Other", icon: "💬", desc: "Anything else on your mind", count: 0 }
+      { id: "work", name: "Work & Pressure", icon: "💼", desc: "Deadlines, burnout, career doubts", count: 128 },
+      { id: "relationships", name: "Relationships", icon: "🤝", desc: "Partners, family, friendships", count: 94 },
+      { id: "fatherhood", name: "Fatherhood", icon: "👨‍👧", desc: "Being a dad, balance, worry", count: 67 },
+      { id: "isolation", name: "Isolation & Loneliness", icon: "🌙", desc: "Feeling cut off or alone", count: 112 },
+      { id: "anger", name: "Anger & Frustration", icon: "🔥", desc: "Managing temper and stress", count: 53 },
+      { id: "mental", name: "Low Mood & Anxiety", icon: "🧠", desc: "Depression, worry, overthinking", count: 141 },
+      { id: "general", name: "General / Other", icon: "💬", desc: "Anything else on your mind", count: 89 }
     ];
 
-    let threads = [];
+    let threads = [
+      { id:1, topic:"work", title:"Anyone else feeling like they’re failing at work but can’t talk about it?", body:"I’ve been in the same job for 6 years. Lately I just feel like I’m coasting and everyone else is moving forward. Don’t want to sound weak to mates or family. Just curious if other blokes feel this.", author:"Quiet_42", time:"2 hours ago", replies:3, views:89,
+        posts:[
+          {author:"Quiet_42", time:"2 hours ago", body:"I’ve been in the same job for 6 years. Lately I just feel like I’m coasting and everyone else is moving forward. Don’t want to sound weak to mates or family. Just curious if other blokes feel this."},
+          {author:"Mate_from_Oz", time:"1 hour ago", body:"Mate, you’re not alone. I felt exactly the same at the 5-year mark. Ended up talking to a mate who said the same thing. Sometimes just admitting it out loud takes the pressure off."},
+          {author:"Anonymous", time:"45 min ago", body:"Same boat. Started writing a few notes to myself about what I actually enjoy in the job. Helped a bit. Still figuring it out though."},
+          {author:"Anonymous", time:"20 min ago", body:"I’ve been there. Talking about it here already feels better than bottling it."}
+        ]},
+      { id:2, topic:"isolation", title:"Moved cities for work. Don’t know how to make friends as an adult.", body:"37, new city, know almost no one. Weekends feel long. Not big on pubs. Any practical tips that actually worked for you?", author:"NewTown", time:"5 hours ago", replies:2, views:156,
+        posts:[
+          {author:"NewTown", time:"5 hours ago", body:"37, new city, know almost no one. Weekends feel long. Not big on pubs. Any practical tips that actually worked for you?"},
+          {author:"TrailRunner", time:"4 hours ago", body:"Joined a local running group. Zero pressure to chat at first, but after a few weeks conversations started naturally. Sports or hobby groups beat forced networking."},
+          {author:"Anonymous", time:"3 hours ago", body:"Same age, same problem two years ago. What helped me was volunteering once a month. Felt useful and met a couple of decent people."}
+        ]},
+      { id:3, topic:"fatherhood", title:"Scared I’m not present enough with the kids", body:"Work is demanding and by the time I’m home I’m drained. I love them but I can feel myself being short. Anyone managed to turn this around without quitting their job?", author:"Dad_Trying", time:"1 day ago", replies:1, views:210,
+        posts:[
+          {author:"Dad_Trying", time:"1 day ago", body:"Work is demanding and by the time I’m home I’m drained. I love them but I can feel myself being short. Anyone managed to turn this around without quitting their job?"},
+          {author:"TwoKids", time:"20 hours ago", body:"I started protecting the first 30 minutes after I walk in the door. Phone stays in the bag. Just sits on the floor with them. Small change but it shifted the whole evening."}
+        ]},
+      { id:4, topic:"mental", title:"Low for months and tired of pretending I’m fine", body:"Not in crisis, just flat. Going through the motions. Hard to tell anyone offline. Looking for others who’ve been in this spot and found ways to slowly climb out.", author:"Anonymous", time:"3 hours ago", replies:1, views:97,
+        posts:[
+          {author:"Anonymous", time:"3 hours ago", body:"Not in crisis, just flat. Going through the motions. Hard to tell anyone offline. Looking for others who’ve been in this spot and found ways to slowly climb out."},
+          {author:"Steady_Progress", time:"2 hours ago", body:"Been there. What helped me was tiny consistent things — 10 min walk most days, talking here, and eventually one conversation with a GP. No magic fix, just slow steps."}
+        ]},
+      { id:5, topic:"anger", title:"Snapping at people more than I used to", body:"Small things set me off lately. I hate it. Looking for practical ways other men have cooled the fuse without just bottling everything.", author:"Cooling_Off", time:"8 hours ago", replies:0, views:64,
+        posts:[{author:"Cooling_Off", time:"8 hours ago", body:"Small things set me off lately. I hate it. Looking for practical ways other men have cooled the fuse without just bottling everything."}]},
+      { id:6, topic:"relationships", title:"How do you tell your partner you’re struggling without dumping everything on them?", body:"I don’t want to make her worry or feel responsible. But keeping it all in isn’t working either. Any approaches that landed well?", author:"Trying_to_Talk", time:"12 hours ago", replies:0, views:112,
+        posts:[{author:"Trying_to_Talk", time:"12 hours ago", body:"I don’t want to make her worry or feel responsible. But keeping it all in isn’t working either. Any approaches that landed well?"}]}
+    ];
+
     let currentTopic = "all";
     let currentThreadId = null;
 
-    // ===== LOAD THREADS FROM SUPABASE =====
-    async function loadThreads() {
-      try {
-        const { data, error } = await supabase
-          .from('threads')
-          .select('*')
-          .order('created_at', { ascending: false });
-
-        if (error) {
-          console.error('Error loading threads:', error);
-          threads = [];
-        } else {
-          threads = (data || []).map(t => ({
-            id: t.id,
-            topic: t.topic,
-            title: t.title,
-            body: t.body,
-            author: t.author,
-            time: t.time,
-            replies: t.replies,
-            views: t.views,
-            posts: t.posts || []
-          }));
-        }
-      } catch (e) {
-        console.error(e);
-        threads = [];
-      }
-      updateTopicCounts();
-      if (document.getElementById('view-community').classList.contains('active')) {
-        renderThreadList();
-      }
-    }
-
-    function updateTopicCounts() {
-      topics.forEach(t => {
-        t.count = threads.filter(th => th.topic === t.id).length;
-      });
-      renderHomeTopics();
-    }
-
     function showView(name) {
+      const viewName = name.startsWith("view-") ? name : "view-" + name;
+      const target = document.getElementById(viewName);
+
       document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
-      const el = document.getElementById("view-" + name);
-      if (el) el.classList.add("active");
-      window.scrollTo(0, 0);
+      if (target) target.classList.add("active");
+
+      window.scrollTo({ top: 0, behavior: "auto" });
+
       if (name === "community") {
         renderSidebar();
         renderThreadList();
-        loadThreads();
       }
       if (name === "home") renderHomeTopics();
-      if (name === "story" && location.hash === "#donate") {
-        setTimeout(() => document.getElementById("donate")?.scrollIntoView({behavior:"smooth"}), 50);
+      if (name === "story") {
+        if (location.hash === "#donate") {
+          setTimeout(() => document.getElementById("donate")?.scrollIntoView({behavior:"smooth"}), 50);
+        }
       }
     }
 
     function renderHomeTopics() {
       document.getElementById("home-topics").innerHTML = topics.map(t => `
-        <button class="topic-card" onclick="filterTopic('${t.id}')">
+        <button type="button" class="topic-card" onclick="filterTopic('${t.id}')">
           <div class="topic-icon">${t.icon}</div>
           <h3>${t.name}</h3>
           <p>${t.desc}</p>
-          <div class="topic-count">${t.count} conversation${t.count === 1 ? '' : 's'}</div>
+          <div class="topic-count">${t.count} conversations</div>
         </button>
       `).join("");
     }
@@ -692,7 +661,7 @@
       const container = document.getElementById("thread-list");
       let list = currentTopic === "all" ? threads : threads.filter(t => t.topic === currentTopic);
       if (list.length === 0) {
-        container.innerHTML = `<div class="post"><p style="color:var(--text-muted)">No conversations in this topic yet. Be the first to start one.</p></div>`;
+        container.innerHTML = `<div class="post"><p style="color:var(--text-muted)">No conversations in this topic yet. Be the first.</p></div>`;
         return;
       }
       container.innerHTML = list.map(t => {
@@ -768,7 +737,7 @@
           </div>
           <div class="form-row">
             <span class="anon-note">Your real identity is never shown.</span>
-            <button class="btn" onclick="submitReply()">Post reply</button>
+            <button type="button" class="btn" onclick="submitReply()">Post reply</button>
           </div>
         </div>`;
       showView("thread");
@@ -785,7 +754,7 @@
       document.getElementById("reply-nickname-field").classList.toggle("hidden", !isNick);
     }
 
-    async function submitNewThread() {
+    function submitNewThread() {
       const topic = document.getElementById("new-topic").value;
       const title = document.getElementById("new-title").value.trim();
       const body = document.getElementById("new-body").value.trim();
@@ -796,48 +765,22 @@
         if (name) author = name;
       }
       if (!title || !body) { alert("Please add a title and message."); return; }
-
-      const posts = [{ author, time: "Just now", body }];
-
-      try {
-        const { data, error } = await supabase
-          .from('threads')
-          .insert({
-            topic,
-            title,
-            body,
-            author,
-            time: "Just now",
-            replies: 0,
-            views: 1,
-            posts
-          })
-          .select()
-          .single();
-
-        if (error) {
-          console.error(error);
-          alert("Could not post. Please try again.");
-          return;
-        }
-
-        closeNewThread();
-        document.getElementById("new-title").value = "";
-        document.getElementById("new-body").value = "";
-        document.getElementById("new-name").value = "";
-        document.querySelector('input[name="identity"][value="anonymous"]').checked = true;
-        toggleNickname();
-
-        await loadThreads();
-        filterTopic(topic);
-        openThread(data.id);
-      } catch (e) {
-        console.error(e);
-        alert("Could not post. Please try again.");
-      }
+      const newId = Date.now();
+      threads.unshift({
+        id: newId, topic, title, body, author, time: "Just now", replies: 0, views: 1,
+        posts: [{ author, time: "Just now", body }]
+      });
+      closeNewThread();
+      document.getElementById("new-title").value = "";
+      document.getElementById("new-body").value = "";
+      document.getElementById("new-name").value = "";
+      document.querySelector('input[name="identity"][value="anonymous"]').checked = true;
+      toggleNickname();
+      filterTopic(topic);
+      openThread(newId);
     }
 
-    async function submitReply() {
+    function submitReply() {
       const body = document.getElementById("reply-body").value.trim();
       if (!body) { alert("Write something first."); return; }
       const identity = document.querySelector('input[name="reply-identity"]:checked').value;
@@ -846,44 +789,18 @@
         const name = document.getElementById("reply-name").value.trim();
         if (name) author = name;
       }
-
       const thread = threads.find(t => t.id === currentThreadId);
       if (!thread) return;
-
-      const newPosts = [...thread.posts, { author, time: "Just now", body }];
-      const newReplies = newPosts.length - 1;
-
-      try {
-        const { error } = await supabase
-          .from('threads')
-          .update({ posts: newPosts, replies: newReplies })
-          .eq('id', currentThreadId);
-
-        if (error) {
-          console.error(error);
-          alert("Could not post reply. Please try again.");
-          return;
-        }
-
-        await loadThreads();
-        openThread(currentThreadId);
-      } catch (e) {
-        console.error(e);
-        alert("Could not post reply. Please try again.");
-      }
+      thread.posts.push({ author, time: "Just now", body });
+      thread.replies = thread.posts.length - 1;
+      openThread(currentThreadId);
     }
 
     document.getElementById("new-thread-modal").addEventListener("click", function(e) {
       if (e.target === this) closeNewThread();
     });
 
-    // Initial load
     renderHomeTopics();
-
-if (location.hash === "#donate") {
-  showView("story");
-}
-    loadThreads();
   </script>
 </body>
 </html>
