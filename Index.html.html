@@ -1,0 +1,1401 @@
+<html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unmuted — Anonymous conversations for men</title>
+  <meta name="description" content="A calm, anonymous space for men to talk about mental health, pressure, relationships and life. No names required.">
+
+  <!-- Open Graph / Facebook / WhatsApp / LinkedIn -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://unmutedni.neocities.org/">
+  <meta property="og:title" content="Unmuted — Your voice matters.">
+  <meta property="og:description" content="A calm, anonymous space for men to talk about pressure, isolation, relationships, fatherhood and mental health. No names required.">
+  <meta property="og:image" content="https://unmutedni.neocities.org/unmuted-og.jpg">
+  <meta property="og:image:secure_url" content="https://unmutedni.neocities.org/unmuted-og.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Unmuted — Your voice matters.">
+  <meta property="og:site_name" content="Unmuted">
+
+  <!-- Twitter / X Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Unmuted — Your voice matters.">
+  <meta name="twitter:description" content="A calm, anonymous space for men to talk about pressure, isolation, relationships, fatherhood and mental health. No names required.">
+  <meta name="twitter:image" content="https://unmutedni.neocities.org/unmuted-og.jpg">
+
+  <style>
+    :root {
+      --bg: #0b1120;
+      --bg-soft: #111827;
+      --bg-card: #1a2332;
+      --bg-elevated: #243044;
+      --border: #2d3a4f;
+      --border-soft: #374151;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --accent: #2dd4bf;
+      --accent-hover: #14b8a6;
+      --accent-soft: rgba(45, 212, 191, 0.14);
+      --accent-glow: rgba(45, 212, 191, 0.25);
+      --danger: #f87171;
+      --danger-soft: rgba(248, 113, 113, 0.15);
+      --radius: 14px;
+      --radius-lg: 20px;
+      --shadow: 0 10px 40px rgba(0, 0, 0, 0.45);
+      --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      min-height: 100vh;
+    }
+    a { color: var(--accent); text-decoration: none; transition: color 0.15s; }
+    a:hover { color: var(--accent-hover); }
+
+    .nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(11, 17, 32, 0.92);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 1.5rem;
+    }
+    .nav-inner {
+      max-width: 1120px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between; height: 68px;
+    }
+    .logo { font-weight: 750; font-size: 1.45rem; letter-spacing: -0.03em; color: var(--text); cursor: pointer; }
+    .logo span { color: var(--accent); }
+    .nav-links { display: flex; gap: 1.8rem; align-items: center; }
+    .nav-links a, .nav-links button.link {
+      color: var(--text-muted); font-size: 0.95rem; font-weight: 500;
+      background: none; border: none; cursor: pointer; font-family: inherit;
+    }
+    .nav-links a:hover, .nav-links a.active,
+    .nav-links button.link:hover { color: var(--text); }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 0.45rem;
+      background: var(--accent); color: #0b1120; font-weight: 650; font-size: 0.95rem;
+      padding: 0.7rem 1.35rem; border-radius: 10px; border: none; cursor: pointer;
+      transition: all 0.18s ease; font-family: inherit;
+    }
+    .btn:hover { background: var(--accent-hover); box-shadow: 0 0 20px var(--accent-glow); transform: translateY(-1px); }
+    .btn-outline { background: transparent; color: var(--text); border: 1.5px solid var(--border); }
+    .btn-outline:hover { background: var(--bg-elevated); border-color: var(--text-muted); box-shadow: none; }
+    .btn-sm { padding: 0.5rem 1.1rem; font-size: 0.875rem; }
+    .btn-lg { padding: 0.95rem 1.8rem; font-size: 1.08rem; border-radius: 12px; }
+    .btn-danger {
+      background: transparent; color: var(--danger); border: 1.5px solid rgba(248,113,113,0.4);
+      padding: 0.4rem 0.85rem; font-size: 0.8rem; border-radius: 8px;
+    }
+    .btn-danger:hover { background: var(--danger-soft); border-color: var(--danger); box-shadow: none; transform: none; }
+
+    .container { max-width: 1120px; margin: 0 auto; padding: 0 1.5rem; }
+    section { padding: 4.5rem 0; }
+
+    .hero { position: relative; padding: 6rem 0 5.5rem; text-align: center; overflow: hidden; }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 80% 55% at 50% -5%, rgba(45, 212, 191, 0.2), transparent),
+        radial-gradient(ellipse 50% 40% at 85% 70%, rgba(52, 211, 153, 0.07), transparent),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg-soft) 100%);
+      z-index: 0;
+    }
+    .hero .container { position: relative; z-index: 1; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: var(--accent-soft); color: var(--accent); font-size: 0.85rem; font-weight: 600;
+      padding: 0.4rem 1rem; border-radius: 100px; margin-bottom: 1.5rem;
+      border: 1px solid rgba(45, 212, 191, 0.3);
+    }
+    .hero h1 {
+      font-size: clamp(2.5rem, 6vw, 3.85rem); font-weight: 750;
+      letter-spacing: -0.04em; line-height: 1.1; margin-bottom: 1.4rem;
+    }
+    .hero h1 span { color: var(--accent); }
+    .hero p { font-size: 1.25rem; color: var(--text-muted); max-width: 520px; margin: 0 auto 2.6rem; line-height: 1.6; }
+    .hero-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 3.5rem; }
+    .trust-row { display: flex; gap: 2.5rem; justify-content: center; flex-wrap: wrap; color: var(--text-muted); font-size: 0.92rem; }
+    .trust-item { display: flex; align-items: center; gap: 0.6rem; }
+    .trust-item .icon {
+      width: 38px; height: 38px; border-radius: 10px; background: var(--accent-soft);
+      display: flex; align-items: center; justify-content: center; color: var(--accent); flex-shrink: 0;
+    }
+    .trust-item svg { width: 18px; height: 18px; }
+
+    .section-header { text-align: center; margin-bottom: 2.75rem; }
+    .section-title { font-size: 1.9rem; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 0.55rem; }
+    .section-sub { color: var(--text-muted); font-size: 1.1rem; max-width: 480px; margin: 0 auto; }
+
+    .topics-section { background: var(--bg-soft); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .topics-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.15rem; }
+    .topic-card {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 1.5rem; cursor: pointer; transition: all 0.2s ease; text-align: left;
+      width: 100%; color: inherit; font-family: inherit; display: block; position: relative; overflow: hidden;
+    }
+    .topic-card::before {
+      content: ""; position: absolute; top: 0; left: 0; width: 4px; height: 100%;
+      background: var(--accent); opacity: 0; transition: opacity 0.2s;
+    }
+    .topic-card:hover {
+      border-color: rgba(45, 212, 191, 0.4); background: var(--bg-elevated);
+      transform: translateY(-3px); box-shadow: var(--shadow);
+    }
+    .topic-card:hover::before { opacity: 1; }
+    .topic-icon {
+      width: 44px; height: 44px; border-radius: 12px; background: var(--accent-soft);
+      display: flex; align-items: center; justify-content: center; color: var(--accent);
+      margin-bottom: 1rem; font-size: 1.3rem;
+    }
+    .topic-card h3 { font-size: 1.08rem; margin-bottom: 0.35rem; font-weight: 650; }
+    .topic-card p { font-size: 0.88rem; color: var(--text-muted); line-height: 1.45; }
+    .topic-count { font-size: 0.8rem; color: var(--accent); margin-top: 0.85rem; font-weight: 500; }
+
+    .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; }
+    .step {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 2rem 1.75rem;
+    }
+    .step-num {
+      display: inline-flex; width: 36px; height: 36px; align-items: center; justify-content: center;
+      background: var(--accent); color: #0b1120; font-weight: 750; border-radius: 10px;
+      margin-bottom: 1.15rem; font-size: 0.95rem;
+    }
+    .step h3 { font-size: 1.15rem; margin-bottom: 0.55rem; font-weight: 650; }
+    .step p { color: var(--text-muted); font-size: 0.98rem; line-height: 1.55; }
+
+    .safety-banner {
+      background: linear-gradient(135deg, rgba(45, 212, 191, 0.1), rgba(52, 211, 153, 0.05));
+      border: 1px solid rgba(45, 212, 191, 0.28); border-radius: var(--radius-lg);
+      padding: 2rem 2.25rem; display: flex; gap: 1.5rem; align-items: flex-start;
+    }
+    .safety-banner .icon-wrap {
+      width: 48px; height: 48px; border-radius: 12px; background: var(--accent-soft);
+      display: flex; align-items: center; justify-content: center; color: var(--accent); flex-shrink: 0;
+    }
+    .safety-banner h3 { font-size: 1.15rem; margin-bottom: 0.5rem; }
+    .safety-banner p { color: var(--text-muted); font-size: 0.98rem; margin-bottom: 0.35rem; }
+
+    .page-header { padding: 3rem 0 1.75rem; position: relative; }
+    .page-header::before {
+      content: ""; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 70% 80% at 25% 0%, rgba(45, 212, 191, 0.13), transparent); z-index: 0;
+    }
+    .page-header .container { position: relative; z-index: 1; }
+    .page-header h1 { font-size: 2.25rem; font-weight: 750; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+    .page-header p { color: var(--text-muted); font-size: 1.1rem; max-width: 520px; }
+
+    .community-layout {
+      display: grid; grid-template-columns: 250px 1fr; gap: 2rem;
+      align-items: start; padding-bottom: 4rem;
+    }
+    @media (max-width: 860px) {
+      .community-layout { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+    }
+    .sidebar {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 1.35rem; position: sticky; top: 88px;
+    }
+    .sidebar h3 {
+      font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.07em;
+      color: var(--text-dim); margin-bottom: 0.9rem; font-weight: 600;
+    }
+    .sidebar-list { list-style: none; }
+    .sidebar-list li a {
+      display: block; padding: 0.55rem 0.8rem; border-radius: 8px;
+      color: var(--text-muted); font-size: 0.95rem; margin-bottom: 2px; transition: all 0.15s;
+    }
+    .sidebar-list li a:hover { background: var(--bg-elevated); color: var(--text); }
+    .sidebar-list li a.active { background: var(--accent-soft); color: var(--accent); font-weight: 550; }
+
+    .feed-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;
+    }
+
+    .thread {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 1.45rem 1.55rem; margin-bottom: 1rem; cursor: pointer; transition: all 0.18s ease;
+    }
+    .thread:hover {
+      border-color: rgba(45, 212, 191, 0.35); background: var(--bg-elevated);
+      transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
+    .thread-meta {
+      display: flex; gap: 0.65rem; align-items: center; font-size: 0.85rem;
+      color: var(--text-dim); margin-bottom: 0.55rem; flex-wrap: wrap;
+    }
+    .username { color: var(--accent); font-weight: 600; }
+    .thread h3 { font-size: 1.12rem; font-weight: 650; margin-bottom: 0.45rem; line-height: 1.35; }
+    .thread p {
+      color: var(--text-muted); font-size: 0.95rem;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.5;
+    }
+    .thread-stats { display: flex; gap: 1.3rem; margin-top: 1rem; font-size: 0.85rem; color: var(--text-dim); }
+
+    .thread-detail { max-width: 700px; }
+    .back-link {
+      display: inline-flex; align-items: center; gap: 0.4rem; color: var(--text-muted);
+      font-size: 0.95rem; margin-bottom: 1.6rem; cursor: pointer; background: none;
+      border: none; font-family: inherit; padding: 0;
+    }
+    .back-link:hover { color: var(--text); }
+
+    .post {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.55rem; margin-bottom: 1rem;
+    }
+    .post.op {
+      border-left: 4px solid var(--accent);
+      background: linear-gradient(90deg, rgba(45, 212, 191, 0.07), var(--bg-card));
+    }
+    .post-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 0.8rem; flex-wrap: wrap; gap: 0.5rem;
+    }
+    .post-body { font-size: 1.05rem; line-height: 1.7; white-space: pre-wrap; }
+
+    .reply-form {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 1.5rem; margin-top: 1.75rem;
+    }
+    .form-group { margin-bottom: 1.2rem; }
+    .form-group label {
+      display: block; font-size: 0.9rem; font-weight: 550;
+      margin-bottom: 0.45rem; color: var(--text-muted);
+    }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%; background: var(--bg); border: 1.5px solid var(--border);
+      border-radius: 10px; color: var(--text); padding: 0.8rem 1.05rem;
+      font-family: inherit; font-size: 1rem; transition: border-color 0.15s;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+    .form-group textarea { resize: vertical; min-height: 120px; }
+    .anon-option {
+      display: flex; align-items: flex-start; gap: 0.8rem; background: var(--bg);
+      border: 1.5px solid var(--border); border-radius: 10px; padding: 0.95rem 1.1rem;
+      margin-bottom: 0.65rem; cursor: pointer; transition: border-color 0.15s;
+    }
+    .anon-option:hover { border-color: var(--border-soft); }
+    .anon-option:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); }
+    .anon-option input { width: auto; margin-top: 0.2rem; accent-color: var(--accent); }
+    .anon-option strong { color: var(--text); display: block; margin-bottom: 0.15rem; }
+    .anon-option span { color: var(--text-muted); font-size: 0.88rem; }
+    .form-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; }
+    .anon-note { font-size: 0.85rem; color: var(--text-dim); }
+
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(4px);
+      display: none; align-items: center; justify-content: center; z-index: 200; padding: 1.5rem;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 18px;
+      width: 100%; max-width: 540px; padding: 2rem; box-shadow: var(--shadow);
+      max-height: 90vh; overflow-y: auto;
+    }
+    .modal h2 { font-size: 1.4rem; margin-bottom: 1.4rem; letter-spacing: -0.02em; }
+    .modal-actions { display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.6rem; }
+
+    /* Moderator panel */
+    .mod-modal { max-width: 720px; }
+    .mod-thread {
+      background: var(--bg); border: 1px solid var(--border); border-radius: 12px;
+      padding: 1.1rem 1.25rem; margin-bottom: 0.85rem;
+    }
+    .mod-thread-header {
+      display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: 0.5rem;
+    }
+    .mod-thread h4 { font-size: 1rem; font-weight: 600; line-height: 1.35; }
+    .mod-thread .meta { font-size: 0.8rem; color: var(--text-dim); margin-bottom: 0.4rem; }
+    .mod-thread .preview { font-size: 0.9rem; color: var(--text-muted); line-height: 1.45;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .mod-replies { margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border); }
+    .mod-reply {
+      display: flex; justify-content: space-between; align-items: flex-start; gap: 0.75rem;
+      padding: 0.5rem 0; font-size: 0.88rem; color: var(--text-muted);
+    }
+    .mod-reply-body { flex: 1; }
+    .mod-empty { text-align: center; color: var(--text-dim); padding: 2rem; }
+
+    .crisis {
+      background: #1c1917; border-top: 1px solid #44403c; padding: 1.6rem;
+      text-align: center; font-size: 0.95rem; color: #d6d3d1;
+    }
+    .crisis strong { color: #fbbf24; }
+    .crisis a { color: #fbbf24; }
+
+    footer {
+      border-top: 1px solid var(--border); padding: 2.75rem 0;
+      color: var(--text-muted); font-size: 0.9rem; background: var(--bg-soft);
+    }
+    .footer-inner { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; }
+
+    /* Tiny mod button at bottom of home */
+    .mod-entry {
+      text-align: center; padding: 1.5rem 0 0.5rem;
+    }
+    .mod-entry button {
+      background: none; border: none; color: var(--text-dim); font-size: 0.7rem;
+      cursor: pointer; font-family: inherit; opacity: 0.45; transition: opacity 0.2s;
+      letter-spacing: 0.04em;
+    }
+    .mod-entry button:hover { opacity: 0.85; color: var(--text-muted); }
+
+    /* ===== Chatbot ===== */
+    .chat-fab {
+      position: fixed; bottom: 24px; right: 24px; z-index: 150;
+      width: 56px; height: 56px; border-radius: 50%;
+      background: var(--accent); color: #0b1120; border: none; cursor: pointer;
+      box-shadow: 0 6px 24px rgba(45, 212, 191, 0.4);
+      display: flex; align-items: center; justify-content: center;
+      transition: transform 0.2s, box-shadow 0.2s; font-size: 1.4rem;
+    }
+    .chat-fab:hover { transform: scale(1.08); box-shadow: 0 8px 28px rgba(45, 212, 191, 0.55); }
+    .chat-fab.open { background: var(--bg-elevated); color: var(--text); box-shadow: 0 4px 16px rgba(0,0,0,0.4); }
+
+    .chat-panel {
+      position: fixed; bottom: 92px; right: 24px; z-index: 150;
+      width: 340px; max-width: calc(100vw - 32px); height: 440px;
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 18px;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.5);
+      display: none; flex-direction: column; overflow: hidden;
+    }
+    .chat-panel.open { display: flex; }
+
+    .chat-header {
+      padding: 1rem 1.15rem; background: var(--bg-elevated); border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;
+    }
+    .chat-header-left { display: flex; align-items: center; gap: 0.7rem; }
+    .chat-avatar {
+      width: 36px; height: 36px; border-radius: 10px; background: var(--accent-soft);
+      display: flex; align-items: center; justify-content: center; color: var(--accent); font-size: 1.1rem;
+    }
+    .chat-header h3 { font-size: 0.95rem; font-weight: 650; }
+    .chat-header p { font-size: 0.75rem; color: var(--text-dim); }
+    .chat-close {
+      background: none; border: none; color: var(--text-dim); cursor: pointer;
+      font-size: 1.2rem; line-height: 1; padding: 0.2rem;
+    }
+    .chat-close:hover { color: var(--text); }
+
+    .chat-messages {
+      flex: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: 0.75rem;
+    }
+    .chat-bubble {
+      max-width: 85%; padding: 0.7rem 0.95rem; border-radius: 14px; font-size: 0.9rem; line-height: 1.5;
+    }
+    .chat-bubble.bot {
+      background: var(--bg); border: 1px solid var(--border); color: var(--text);
+      border-bottom-left-radius: 4px; align-self: flex-start;
+    }
+    .chat-bubble.user {
+      background: var(--accent); color: #0b1120; border-bottom-right-radius: 4px; align-self: flex-end;
+    }
+    .chat-bubble.crisis {
+      background: #1c1917; border: 1px solid #fbbf24; color: #fef3c7;
+    }
+
+    .chat-input-row {
+      padding: 0.75rem; border-top: 1px solid var(--border); display: flex; gap: 0.5rem;
+    }
+    .chat-input-row input {
+      flex: 1; background: var(--bg); border: 1.5px solid var(--border); border-radius: 10px;
+      color: var(--text); padding: 0.65rem 0.9rem; font-family: inherit; font-size: 0.9rem;
+    }
+    .chat-input-row input:focus { outline: none; border-color: var(--accent); }
+    .chat-input-row button {
+      background: var(--accent); color: #0b1120; border: none; border-radius: 10px;
+      padding: 0 0.9rem; font-weight: 650; cursor: pointer; font-family: inherit;
+    }
+    .chat-input-row button:hover { background: var(--accent-hover); }
+
+    .view { display: none; }
+    .view.active { display: block; }
+    .hidden { display: none !important; }
+
+    @media (max-width: 640px) {
+      .nav-links a:not(.btn), .nav-links button.link:not(.btn) { display: none; }
+      .hero { padding: 4rem 0 3.5rem; }
+      .page-header { padding-top: 2.25rem; }
+      .safety-banner { flex-direction: column; gap: 1rem; }
+      .chat-panel { bottom: 84px; right: 12px; left: 12px; width: auto; height: 60vh; }
+      .chat-fab { bottom: 16px; right: 16px; }
+    }
+  </style>
+
+  <!-- Firebase SDKs (compat version for easy drop-in) -->
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <div class="logo" onclick="showView('home')">Unmuted<span>.</span></div>
+      <div class="nav-links">
+        <button class="link" onclick="showView('community')">Community</button>
+        <button class="link" onclick="showView('story')">Our Story</button>
+        <button class="link" onclick="showView('home'); setTimeout(()=&gt;document.getElementById('how').scrollIntoView(),100)">How it works</button>
+        <button class="btn btn-sm" onclick="openNewThread()">Start talking</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ========== HOME VIEW ========== -->
+  <div id="view-home" class="view active">
+    <section class="hero">
+      <div class="hero-bg"></div>
+      <div class="container">
+        <div class="hero-badge">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          Fully anonymous by default
+        </div>
+        <h1>Talk freely.<br><span>Stay unmuted.</span></h1>
+        <p>A calm space for men to talk about pressure, isolation, relationships, fatherhood and the stuff we usually keep quiet.</p>
+        <div class="hero-actions">
+          <button class="btn btn-lg" onclick="showView('community')">Enter the community →</button>
+          <button class="btn btn-outline btn-lg" onclick="document.getElementById('how').scrollIntoView()">How it works</button>
+        </div>
+        <div class="trust-row">
+          <div class="trust-item">
+            <div class="icon"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg></div>
+            No real names needed
+          </div>
+          <div class="trust-item">
+            <div class="icon"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div>
+            Peer support, not therapy
+          </div>
+          <div class="trust-item">
+            <div class="icon"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg></div>
+            Moderated &amp; respectful
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- Topics on homepage -->
+    <section class="topics-section" id="topics-home">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">What do you want to talk about?</h2>
+          <p class="section-sub">Choose a topic or start something new. Fully anonymous.</p>
+        </div>
+        <div class="topics-grid" id="home-topics-grid">
+          <!-- Filled by JS -->
+        </div>
+        <div style="text-align:center; margin-top: 2rem;">
+          <button class="btn btn-primary btn-lg" onclick="showView('community')">Enter the community →</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="how">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">How Unmuted works</h2>
+          <p class="section-sub">Simple, private, and built for men who don’t usually talk.</p>
+        </div>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <h3>Stay fully anonymous</h3>
+            <p>Post with no name at all. We never ask for email or personal details just to join a conversation.</p>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <h3>Choose your topic</h3>
+            <p>Work pressure, relationships, fatherhood, isolation, anger — pick what fits or start something new.</p>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <h3>Talk like a human</h3>
+            <p>Direct, respectful, no judgement. The space is moderated so it stays useful and safe.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section style="padding-top:0;padding-bottom:2rem">
+      <div class="container" style="text-align:center">
+        <button class="btn btn-lg" onclick="showView('story')" style="margin-bottom:0.5rem">The story behind Unmuted →</button>
+        <br><br>
+        <button class="btn btn-outline btn-lg" onclick="showView('story')">Support the Mission ❤️</button>
+        <p style="color:var(--text-muted);font-size:0.95rem;margin-top:0.75rem">How a 14-year-old’s idea became this community</p>
+      </div>
+    </section>
+
+    <section style="padding-top:0">
+      <div class="container">
+        <div class="safety-banner">
+          <div class="icon-wrap">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          </div>
+          <div>
+            <h3>This is a safe space</h3>
+            <p>Unmuted is peer support — not a crisis service or professional therapy. Moderators are present and the community guidelines are clear.</p>
+            <p>If you are in immediate danger or having thoughts of harming yourself, please contact emergency services or a crisis line right away.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tiny moderator entry point at the very bottom of home -->
+    <div class="mod-entry">
+      <button onclick="openModLogin()" title="Moderator access">⚙ mod</button>
+    </div>
+  </div>
+
+  <!-- ========== STORY / ABOUT VIEW ========== -->
+  <div id="view-story" class="view">
+    <div class="container" style="max-width:740px;padding-top:3rem;padding-bottom:4rem">
+      <button class="back-link" onclick="showView('home')">← Back to home</button>
+      
+      <div style="margin-bottom:2.5rem">
+        <div class="hero-badge" style="margin-bottom:1.25rem">Our story</div>
+        <h1 style="font-size:clamp(1.9rem,4vw,2.6rem);font-weight:750;letter-spacing:-0.03em;line-height:1.2;margin-bottom:1rem">
+          The Story Behind <span style="color:var(--accent)">Unmuted</span>
+        </h1>
+      </div>
+
+      <div class="post" style="border-left:4px solid var(--accent);padding:2rem 1.75rem;margin-bottom:1.5rem">
+        <p style="font-size:1.1rem;line-height:1.75;margin-bottom:1.25rem;color:var(--text)">
+          Unmuted was founded from a simple but powerful idea by <strong>Matthew Moore</strong>, who came up with the vision at just 14 years old.
+        </p>
+        <p style="font-size:1.05rem;line-height:1.75;margin-bottom:1.25rem;color:var(--text-muted)">
+          After experiencing his own struggles with mental health, Matthew understood how difficult it can be to speak openly about what you’re going through — especially when you feel pressure to stay strong or worry about being judged. He wanted to create something that could help change that.
+        </p>
+        <p style="font-size:1.05rem;line-height:1.75;margin-bottom:1.25rem;color:var(--text-muted)">
+          Unmuted is a community built to remind men and boys that they don’t have to face everything alone, that opening up is a sign of courage, and that their feelings matter.
+        </p>
+        <p style="font-size:1.05rem;line-height:1.75;margin-bottom:1.25rem;color:var(--text-muted)">
+          The anonymous option was created to give people the freedom to share their thoughts and experiences without feeling exposed or judged, helping them take that first step towards speaking out.
+        </p>
+        <p style="font-size:1.05rem;line-height:1.75;margin-bottom:1.25rem;color:var(--text-muted)">
+          Whether someone needs to get something off their chest, share advice, support another person, or simply know that others understand, Unmuted aims to provide a space where every voice matters.
+        </p>
+        <p style="font-size:1.05rem;line-height:1.75;margin-bottom:1.5rem;color:var(--text-muted)">
+          The mission is to break the stigma surrounding men’s mental health, challenge outdated expectations about masculinity, and build a future where no one feels they have to suffer in silence.
+        </p>
+        <p style="font-size:1.15rem;line-height:1.7;font-weight:600;color:var(--text)">
+          Your voice matters. Your story matters. You are never weak for speaking up.
+        </p>
+        <p style="font-size:1.25rem;font-weight:700;color:var(--accent);margin-top:1rem">
+          It’s time to be Unmuted.
+        </p>
+      </div>
+
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:1.75rem;margin:2rem 0 2.5rem;text-align:left">
+        <h3 style="margin-bottom:0.6rem;font-size:1.2rem">Support the Mission</h3>
+        <p style="color:var(--text-muted);font-size:0.98rem;margin-bottom:1.2rem;line-height:1.6">
+          Unmuted is built to help men and boys feel less alone. If you’d like to support the mission, you can donate below. Every contribution helps keep the space running and growing.
+        </p>
+        <a href="#" class="btn btn-lg" style="width:100%;justify-content:center" onclick="alert('Donation integration coming soon – thank you for your support!')">Donate – All cards accepted</a>
+        <p style="color:var(--text-dim);font-size:0.85rem;margin-top:0.9rem;text-align:center">
+          Secure payments • All major cards accepted
+        </p>
+      </div>
+
+      <div style="text-align:center">
+        <button class="btn btn-lg" onclick="showView('community')">Join the community →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== COMMUNITY VIEW ========== -->
+  <div id="view-community" class="view">
+    <div class="container">
+      <div class="page-header">
+        <h1>Community</h1>
+        <p>Anonymous conversations. Reply freely. No real names required.</p>
+      </div>
+      <div class="community-layout">
+        <aside class="sidebar">
+          <h3>Topics</h3>
+          <ul class="sidebar-list" id="sidebar-topics"></ul>
+        </aside>
+        <div>
+          <div class="feed-header">
+            <div>
+              <h2 class="section-title" style="margin-bottom:0.25rem" id="feed-title">All conversations</h2>
+              <p class="section-sub" style="margin-bottom:0" id="feed-sub">Anonymous threads from the community</p>
+            </div>
+            <button class="btn" onclick="openNewThread()">+ New conversation</button>
+          </div>
+          <div id="thread-list"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== THREAD DETAIL VIEW ========== -->
+  <div id="view-thread" class="view">
+    <div class="container">
+      <div style="padding-top:2rem;padding-bottom:4rem">
+        <button class="back-link" onclick="showView('community')">← Back to conversations</button>
+        <div class="thread-detail" id="thread-detail"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CRISIS + FOOTER -->
+  <div class="crisis">
+    <strong>In crisis?</strong> Please reach out for immediate help —
+    <a href="https://www.iasp.info/suicidalthoughts/" target="_blank" rel="noopener">International Association for Suicide Prevention</a>
+    or your local emergency number.
+  </div>
+  <footer>
+    <div class="container footer-inner">
+      <div>
+        <strong style="color:var(--text)">Unmuted</strong> — Anonymous conversations for men.<br>
+        Peer support community. Not a substitute for professional care.
+      </div>
+      <div>
+        <button class="link" style="background:none;border:none;color:var(--accent);cursor:pointer;font-family:inherit" onclick="showView('home')">Home</button> ·
+        <button class="link" style="background:none;border:none;color:var(--accent);cursor:pointer;font-family:inherit" onclick="showView('community')">Community</button> ·
+        <button class="link" style="background:none;border:none;color:var(--accent);cursor:pointer;font-family:inherit" onclick="showView('story')">Our Story</button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- NEW CONVERSATION MODAL -->
+  <div class="modal-overlay" id="new-thread-modal">
+    <div class="modal">
+      <h2>Start a conversation</h2>
+      <div class="form-group">
+        <label>Topic</label>
+        <select id="new-topic">
+          <option value="work">Work &amp; Pressure</option>
+          <option value="relationships">Relationships</option>
+          <option value="fatherhood">Fatherhood</option>
+          <option value="isolation">Isolation &amp; Loneliness</option>
+          <option value="anger">Anger &amp; Frustration</option>
+          <option value="mental">Low Mood &amp; Anxiety</option>
+          <option value="general">General / Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" id="new-title" placeholder="What’s on your mind?" maxlength="120">
+      </div>
+      <div class="form-group">
+        <label>Your message</label>
+        <textarea id="new-body" rows="5" placeholder="Share as much or as little as you want."></textarea>
+      </div>
+      <div class="form-group">
+        <label>How do you want to appear?</label>
+        <label class="anon-option">
+          <input type="radio" name="identity" value="anonymous" checked="" onchange="toggleNickname()">
+          <div><strong>Fully anonymous</strong><br><span>No name shown. Just “Anonymous”.</span></div>
+        </label>
+        <label class="anon-option">
+          <input type="radio" name="identity" value="nickname" onchange="toggleNickname()">
+          <div><strong>Use a nickname</strong><br><span>Optional. Still not your real name.</span></div>
+        </label>
+        <div id="nickname-field" class="hidden" style="margin-top:0.75rem">
+          <input type="text" id="new-name" placeholder="Choose a nickname" maxlength="24">
+        </div>
+      </div>
+      <p class="anon-note">Your real identity is never shown. Posts are moderated.</p>
+      <div class="modal-actions">
+        <button class="btn btn-outline" onclick="closeNewThread()">Cancel</button>
+        <button class="btn" onclick="submitNewThread()">Post</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODERATOR LOGIN MODAL -->
+  <div class="modal-overlay" id="mod-login-modal">
+    <div class="modal" style="max-width:380px">
+      <h2>Moderator access</h2>
+      <p style="color:var(--text-muted);font-size:0.95rem;margin-bottom:1.25rem">Enter the moderator password to review and remove posts.</p>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="mod-password" placeholder="••••••••" autocomplete="off">
+      </div>
+      <p id="mod-login-error" style="color:var(--danger);font-size:0.88rem;margin-bottom:0.75rem;display:none">Incorrect password.</p>
+      <div class="modal-actions">
+        <button class="btn btn-outline" onclick="closeModLogin()">Cancel</button>
+        <button class="btn" onclick="checkModPassword()">Enter</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODERATOR PANEL MODAL -->
+  <div class="modal-overlay" id="mod-panel-modal">
+    <div class="modal mod-modal">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem">
+        <h2 style="margin:0">Moderator panel</h2>
+        <button class="btn btn-outline btn-sm" onclick="closeModPanel()">Close</button>
+      </div>
+      <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:1.25rem">Review posts and remove any that break community guidelines. Changes apply immediately.</p>
+      <div id="mod-thread-list"></div>
+    </div>
+  </div>
+
+  <script>
+    // ============================================================
+    // FIREBASE CONFIG - YOU MUST REPLACE THESE WITH YOUR OWN VALUES
+    // 1. Go to https://console.firebase.google.com
+    // 2. Create a free project (or use existing)
+    // 3. Add a Web app
+    // 4. Copy the firebaseConfig object here
+    // 5. In Firestore, create a database (start in test mode for now)
+    // 6. Set rules to allow read/write for testing (see README)
+    // ============================================================
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY_HERE",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const THREADS_COL = "threads";
+
+    const MOD_PASSWORD = "matthew55";  // Visible in source - change it. Real security needs Firebase Auth + Security Rules.
+    let isModerator = false;
+
+    let threads = [];          // Will be filled from Firestore
+    let threadsLoaded = false;
+    let unsubscribe = null;    // For real-time listener
+
+    // Convert Firestore data to the shape the rest of the app expects
+    function docToThread(doc) {
+      const data = doc.data();
+      return {
+        id: doc.id,                    // Use Firestore doc id (string)
+        topic: data.topic || "general",
+        title: data.title || "",
+        body: data.body || "",
+        author: data.author || "Anonymous",
+        time: data.time || "Just now",
+        replies: data.replies || 0,
+        views: data.views || 1,
+        posts: data.posts || [],
+        createdAt: data.createdAt || 0
+      };
+    }
+
+    // Load + listen in real-time so everyone sees new posts
+    function startRealtimeListener() {
+      if (unsubscribe) unsubscribe();
+
+      unsubscribe = db.collection(THREADS_COL)
+        .orderBy("createdAt", "desc")
+        .onSnapshot((snapshot) => {
+          threads = snapshot.docs.map(docToThread);
+          threadsLoaded = true;
+
+          // Re-render whatever view is active
+          if (document.getElementById("view-community") && document.getElementById("view-community").classList.contains("active")) {
+            // re-apply current filter if any
+            const activeTopic = document.querySelector(".topic-item.active");
+            if (activeTopic) {
+              const topicId = activeTopic.dataset.topic;
+              filterTopic(topicId === "all" ? null : topicId);
+            } else {
+              renderThreadList(threads);
+            }
+          }
+          // If a thread is open, refresh it
+          if (typeof currentThreadId !== "undefined" && currentThreadId) {
+            openThread(currentThreadId);
+          }
+          // Update mod panel if open
+          if (document.getElementById("mod-panel") && document.getElementById("mod-panel").classList.contains("open")) {
+            renderModPanel();
+          }
+        }, (error) => {
+          console.error("Firestore error:", error);
+          alert("Could not load conversations. Check your Firebase config and security rules.");
+        });
+    }
+
+    // Helper to get a nice relative time
+    function relativeTime(ts) {
+      if (!ts) return "Just now";
+      const diff = Date.now() - ts;
+      const mins = Math.floor(diff / 60000);
+      if (mins < 1) return "Just now";
+      if (mins < 60) return mins + " min ago";
+      const hours = Math.floor(mins / 60);
+      if (hours < 24) return hours + " hour" + (hours > 1 ? "s" : "") + " ago";
+      const days = Math.floor(hours / 24);
+      return days + " day" + (days > 1 ? "s" : "") + " ago";
+    }
+
+    const topics = [
+      { id: "work", name: "Work & Pressure", icon: "💼", desc: "Deadlines, burnout, career doubts", count: 128 },
+      { id: "relationships", name: "Relationships", icon: "🤝", desc: "Partners, family, friendships", count: 94 },
+      { id: "fatherhood", name: "Fatherhood", icon: "👨‍👧", desc: "Being a dad, balance, worry", count: 67 },
+      { id: "isolation", name: "Isolation & Loneliness", icon: "🌙", desc: "Feeling cut off or alone", count: 112 },
+      { id: "anger", name: "Anger & Frustration", icon: "🔥", desc: "Managing temper and stress", count: 53 },
+      { id: "mental", name: "Low Mood & Anxiety", icon: "🧠", desc: "Depression, worry, overthinking", count: 141 },
+      { id: "general", name: "General / Other", icon: "💬", desc: "Anything else on your mind", count: 89 }
+    ];
+
+    
+    // Threads are now loaded from Firebase in real-time via startRealtimeListener()
+
+let currentThreadId = null;
+
+    function showView(name) {
+      document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+      const el = document.getElementById("view-" + name);
+      if (el) el.classList.add("active");
+      window.scrollTo(0, 0);
+      if (name === "community") {
+        renderSidebar();
+        renderThreadList();
+      }
+    }
+
+    
+    function renderHomeTopics() {
+      const grid = document.getElementById("home-topics-grid");
+      if (!grid) return;
+      grid.innerHTML = topics.map(t => `
+        <button class="topic-card" onclick="showView('community'); setTimeout(() => filterTopic('${t.id}'), 50);">
+          <div style="font-size:1.75rem; margin-bottom:0.6rem;">${t.icon}</div>
+          <div style="font-weight:600; font-size:1.05rem; margin-bottom:0.3rem;">${t.name}</div>
+          <div style="color:var(--text-muted); font-size:0.9rem; line-height:1.4;">${t.desc}</div>
+        </button>
+      `).join("");
+    }
+
+
+    function renderSidebar() {
+      document.getElementById("sidebar-topics").innerHTML = `
+        <li><a href="#" class="${currentTopic==='all'?'active':''}" onclick="filterTopic('all');return false">All topics</a></li>
+        ${topics.map(t => `<li><a href="#" class="${currentTopic===t.id?'active':''}" onclick="filterTopic('${t.id}');return false">${t.name}</a></li>`).join("")}
+      `;
+    }
+
+    function renderThreadList() {
+      const container = document.getElementById("thread-list");
+      let list = currentTopic === "all" ? threads : threads.filter(t => t.topic === currentTopic);
+      if (list.length === 0) {
+        container.innerHTML = `<div class="post"><p style="color:var(--text-muted)">No conversations in this topic yet. Be the first.</p></div>`;
+        return;
+      }
+      container.innerHTML = list.map(t => {
+        const topicName = topics.find(x => x.id === t.topic)?.name || t.topic;
+        return `
+          <div class="thread" onclick="openThread(${t.id})">
+            <div class="thread-meta">
+              <span class="username">${t.author}</span><span>·</span><span>${topicName}</span><span>·</span><span>${t.time}</span>
+            </div>
+            <h3>${t.title}</h3>
+            <p>${t.body}</p>
+            <div class="thread-stats">
+              <span>${t.replies} ${t.replies===1?'reply':'replies'}</span>
+              <span>${t.views} views</span>
+            </div>
+          </div>`;
+      }).join("");
+    }
+
+    function filterTopic(id) {
+      currentTopic = id;
+      const title = id === "all" ? "All conversations" : (topics.find(t => t.id === id)?.name || id);
+      document.getElementById("feed-title").textContent = title;
+      document.getElementById("feed-sub").textContent = id === "all" ? "Anonymous threads from the community" : "Conversations in this topic";
+      renderSidebar();
+      renderThreadList();
+      showView("community");
+    }
+
+    function openThread(id) {
+      currentThreadId = id;
+      const thread = threads.find(t => t.id === id);
+      if (!thread) return;
+      const topicName = topics.find(x => x.id === thread.topic)?.name || thread.topic;
+      document.getElementById("thread-detail").innerHTML = `
+        <div class="post op">
+          <div class="post-header">
+            <div>
+              <span class="username">${thread.author}</span>
+              <span style="color:var(--text-muted);font-size:0.85rem;margin-left:0.5rem">${thread.time} · ${topicName}</span>
+            </div>
+          </div>
+          <h2 style="font-size:1.4rem;margin-bottom:0.85rem;letter-spacing:-0.02em">${thread.title}</h2>
+          <div class="post-body">${thread.body}</div>
+        </div>
+        <h3 style="margin:1.75rem 0 1rem;font-size:1.1rem">${thread.posts.length-1} ${thread.posts.length-1===1?'reply':'replies'}</h3>
+        ${thread.posts.slice(1).map(p => `
+          <div class="post">
+            <div class="post-header">
+              <span class="username">${p.author}</span>
+              <span style="color:var(--text-muted);font-size:0.85rem">${p.time}</span>
+            </div>
+            <div class="post-body">${p.body}</div>
+          </div>`).join("")}
+        <div class="reply-form">
+          <h3 style="font-size:1.05rem;margin-bottom:1rem">Write a reply</h3>
+          <div class="form-group">
+            <label>How do you want to appear?</label>
+            <label class="anon-option">
+              <input type="radio" name="reply-identity" value="anonymous" checked onchange="toggleReplyNickname()" />
+              <div><strong>Fully anonymous</strong><br><span>No name shown</span></div>
+            </label>
+            <label class="anon-option">
+              <input type="radio" name="reply-identity" value="nickname" onchange="toggleReplyNickname()" />
+              <div><strong>Use a nickname</strong><br><span>Optional</span></div>
+            </label>
+            <div id="reply-nickname-field" class="hidden" style="margin-top:0.75rem">
+              <input type="text" id="reply-name" placeholder="Choose a nickname" maxlength="24" />
+            </div>
+          </div>
+          <div class="form-group">
+            <textarea id="reply-body" placeholder="Write your reply…"></textarea>
+          </div>
+          <div class="form-row">
+            <span class="anon-note">Your real identity is never shown.</span>
+            <button class="btn" onclick="submitReply()">Post reply</button>
+          </div>
+        </div>`;
+      showView("thread");
+    }
+
+    function openNewThread() { document.getElementById("new-thread-modal").classList.add("open"); }
+    function closeNewThread() { document.getElementById("new-thread-modal").classList.remove("open"); }
+    function toggleNickname() {
+      const isNick = document.querySelector('input[name="identity"]:checked').value === "nickname";
+      document.getElementById("nickname-field").classList.toggle("hidden", !isNick);
+    }
+    function toggleReplyNickname() {
+      const isNick = document.querySelector('input[name="reply-identity"]:checked').value === "nickname";
+      document.getElementById("reply-nickname-field").classList.toggle("hidden", !isNick);
+    }
+
+    async function submitNewThread() {
+      const topic = document.getElementById("new-topic").value;
+      const title = document.getElementById("new-title").value.trim();
+      const body = document.getElementById("new-body").value.trim();
+      const identity = document.querySelector('input[name="identity"]:checked').value;
+      let author = "Anonymous";
+      if (identity === "nickname") {
+        const name = document.getElementById("new-name").value.trim();
+        if (name) author = name;
+      }
+      if (!title || !body) { alert("Please add a title and message."); return; }
+
+      const now = Date.now();
+      const newThread = {
+        topic,
+        title,
+        body,
+        author,
+        time: "Just now",
+        replies: 0,
+        views: 1,
+        posts: [{ author, time: "Just now", body }],
+        createdAt: now
+      };
+
+      try {
+        const docRef = await db.collection(THREADS_COL).add(newThread);
+        closeNewThread();
+        document.getElementById("new-title").value = "";
+        document.getElementById("new-body").value = "";
+        document.getElementById("new-name").value = "";
+        document.querySelector('input[name="identity"][value="anonymous"]').checked = true;
+        toggleNickname();
+        // Real-time listener will update the list and we can open the new one
+        // Small delay to let the snapshot arrive
+        setTimeout(() => openThread(docRef.id), 300);
+      } catch (err) {
+        console.error(err);
+        alert("Could not post. Check your connection and Firebase setup.");
+      }
+    }
+
+    async function submitReply() {
+      const body = document.getElementById("reply-body").value.trim();
+      if (!body) { alert("Write something first."); return; }
+      const identity = document.querySelector('input[name="reply-identity"]:checked').value;
+      let author = "Anonymous";
+      if (identity === "nickname") {
+        const name = document.getElementById("reply-name").value.trim();
+        if (name) author = name;
+      }
+      const thread = threads.find(t => t.id === currentThreadId);
+      if (!thread) return;
+
+      const newPost = { author, time: "Just now", body };
+
+      try {
+        // Update the document in Firestore
+        const docRef = db.collection(THREADS_COL).doc(currentThreadId);
+        await docRef.update({
+          posts: firebase.firestore.FieldValue.arrayUnion(newPost),
+          replies: firebase.firestore.FieldValue.increment(1)
+        });
+        // Clear the form
+        document.getElementById("reply-body").value = "";
+        // Real-time listener will refresh the view
+      } catch (err) {
+        console.error(err);
+        alert("Could not post reply. Check connection / Firebase rules.");
+      }
+    }
+
+    /* ========== MODERATOR FUNCTIONS ========== */
+    function openModLogin() {
+      document.getElementById("mod-password").value = "";
+      document.getElementById("mod-login-error").style.display = "none";
+      document.getElementById("mod-login-modal").classList.add("open");
+      setTimeout(() => document.getElementById("mod-password").focus(), 100);
+    }
+    function closeModLogin() {
+      document.getElementById("mod-login-modal").classList.remove("open");
+    }
+    function checkModPassword() {
+      const pw = document.getElementById("mod-password").value;
+      if (pw === MOD_PASSWORD) {
+        isModerator = true;
+        closeModLogin();
+        openModPanel();
+      } else {
+        document.getElementById("mod-login-error").style.display = "block";
+        document.getElementById("mod-password").value = "";
+        document.getElementById("mod-password").focus();
+      }
+    }
+    function openModPanel() {
+      if (!isModerator) return;
+      renderModPanel();
+      document.getElementById("mod-panel-modal").classList.add("open");
+    }
+    function closeModPanel() {
+      document.getElementById("mod-panel-modal").classList.remove("open");
+    }
+    function renderModPanel() {
+      const container = document.getElementById("mod-thread-list");
+      if (threads.length === 0) {
+        container.innerHTML = `<div class="mod-empty">No posts to review.</div>`;
+        return;
+      }
+      container.innerHTML = threads.map(t => {
+        const topicName = topics.find(x => x.id === t.topic)?.name || t.topic;
+        const repliesHtml = t.posts.length > 1 ? `
+          <div class="mod-replies">
+            <div style="font-size:0.78rem;color:var(--text-dim);margin-bottom:0.4rem;font-weight:600">REPLIES</div>
+            ${t.posts.slice(1).map((p, idx) => `
+              <div class="mod-reply">
+                <div class="mod-reply-body">
+                  <strong style="color:var(--accent)">${p.author}</strong> · ${p.time}<br>
+                  ${p.body.substring(0, 120)}${p.body.length > 120 ? "…" : ""}
+                </div>
+                <button class="btn-danger" onclick="deleteReply(${t.id}, ${idx + 1})">Remove</button>
+              </div>
+            `).join("")}
+          </div>` : "";
+        return `
+          <div class="mod-thread">
+            <div class="mod-thread-header">
+              <div>
+                <div class="meta">${t.author} · ${topicName} · ${t.time} · ${t.replies} replies</div>
+                <h4>${t.title}</h4>
+              </div>
+              <button class="btn-danger" onclick="deleteThread(${t.id})">Remove thread</button>
+            </div>
+            <div class="preview">${t.body}</div>
+            ${repliesHtml}
+          </div>`;
+      }).join("");
+    }
+    async function deleteThread(id) {
+      if (!confirm("Remove this entire conversation and all its replies?")) return;
+      try {
+        await db.collection(THREADS_COL).doc(id).delete();
+        // Listener will update the UI
+        if (currentThreadId === id) {
+          showView("community");
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Could not delete.");
+      }
+    }
+    async function deleteReply(threadId, postIndex) {
+      if (!confirm("Remove this reply?")) return;
+      const thread = threads.find(t => t.id === threadId);
+      if (!thread) return;
+
+      const newPosts = thread.posts.slice();
+      newPosts.splice(postIndex, 1);
+
+      try {
+        await db.collection(THREADS_COL).doc(threadId).update({
+          posts: newPosts,
+          replies: Math.max(0, newPosts.length - 1)
+        });
+      } catch (err) {
+        console.error(err);
+        alert("Could not delete reply.");
+      }
+    }
+
+    // Enter key support for mod password
+    document.getElementById("mod-password").addEventListener("keydown", function(e) {
+      if (e.key === "Enter") checkModPassword();
+    });
+
+    document.getElementById("new-thread-modal").addEventListener("click", function(e) {
+      if (e.target === this) closeNewThread();
+    });
+    document.getElementById("mod-login-modal").addEventListener("click", function(e) {
+      if (e.target === this) closeModLogin();
+    });
+    document.getElementById("mod-panel-modal").addEventListener("click", function(e) {
+      if (e.target === this) closeModPanel();
+    });
+
+    /* ===== CHATBOT (real AI) ===== */
+    // Paste your API key here (xAI / OpenAI / Groq etc.)
+    // Get a free key at: https://console.x.ai  or  https://console.groq.com
+    const AI_API_KEY = "";          // ← put your key between the quotes
+    const AI_API_URL = "https://api.x.ai/v1/chat/completions";  // xAI. Change if using another provider
+    const AI_MODEL   = "grok-2-latest";                         // or "llama-3.3-70b-versatile" for Groq, etc.
+
+    const SYSTEM_PROMPT = `You are the Unmuted helper bot — a calm, friendly, lightly funny AI on a website called Unmuted.
+
+=== ABOUT UNMUTED ===
+Unmuted is an anonymous peer-support community for men and boys. It is a calm space to talk about pressure, isolation, relationships, fatherhood, anger, low mood and anxiety — the things men usually keep quiet. No real names are required. It is peer support, not professional therapy or a crisis service.
+
+=== THE STORY / FOUNDER ===
+Unmuted was founded from a simple but powerful idea by Matthew Moore, who came up with the vision at just 14 years old.
+After experiencing his own struggles with mental health, Matthew understood how difficult it can be to speak openly — especially when you feel pressure to stay strong or worry about being judged. He wanted to create something that could help change that.
+The mission is to break the stigma surrounding men’s mental health, challenge outdated expectations about masculinity, and build a future where no one feels they have to suffer in silence.
+The anonymous option exists so people can share without feeling exposed or judged, making it easier to take the first step.
+Key message of the site: “Your voice matters. Your story matters. You are never weak for speaking up. It’s time to be Unmuted.”
+
+=== HOW IT WORKS ===
+1. Stay fully anonymous (or use an optional nickname)
+2. Choose a topic or start a new conversation
+3. Talk respectfully — the space is moderated
+No email or personal details are needed just to join a conversation.
+
+=== TOPICS PEOPLE TALK ABOUT ===
+Work & Pressure, Relationships, Fatherhood, Isolation & Loneliness, Anger & Frustration, Low Mood & Anxiety, and General / Other.
+
+=== YOUR PERSONALITY ===
+- Calm, warm, and straightforward
+- Lightly funny / dry humour when appropriate (never forced)
+- Never preachy or overly formal
+- Keep replies short (2–5 sentences usually)
+- Encourage people to use the community
+- You are not a therapist. If someone is in serious distress, gently remind them this is peer support and they should also talk to a GP or crisis line.
+
+Never give medical advice. Never encourage self-harm.`;
+
+    const crisisWords = [
+      "suicide", "kill myself", "end my life", "want to die", "self harm", "self-harm",
+      "hurt myself", "cutting", "overdose", "no reason to live", "better off dead",
+      "don't want to live", "dont want to live", "ending it", "suicidal"
+    ];
+
+    function isCrisis(text) {
+      const lower = text.toLowerCase();
+      return crisisWords.some(w => lower.includes(w));
+    }
+
+    const chatHistory = [
+      { role: "system", content: SYSTEM_PROMPT }
+    ];
+
+    // Local fallback (used when no API key is set)
+    function localReply(userText) {
+      const t = userText.toLowerCase().trim();
+      if (/^(hi|hey|hello|yo|sup)/.test(t))
+        return "Hey. Welcome to Unmuted. 👋 This is a calm, anonymous space for men to talk about the stuff we usually keep quiet. What’s on your mind?";
+      if (t.includes("who founded") || t.includes("who started") || t.includes("founder") || t.includes("matthew") || t.includes("our story") || t.includes("the story"))
+        return "Unmuted was founded by Matthew Moore. He came up with the idea at just 14 after going through his own mental health struggles. He wanted a place where men and boys could speak openly without feeling judged. That’s the heart of this community.";
+      if (t.includes("what is unmuted") || t.includes("about unmuted") || t.includes("this site") || t.includes("this place"))
+        return "Unmuted is an anonymous peer-support space for men and boys. No real names, no judgement — just real conversations about pressure, isolation, relationships, fatherhood and mental health. It was started by Matthew Moore when he was 14.";
+      if (t.includes("how") && t.includes("work"))
+        return "Simple: stay anonymous (or pick a nickname), choose a topic or start a new conversation, and talk like a human. No accounts needed.";
+      if (t.includes("mission") || t.includes("why") || t.includes("purpose"))
+        return "The mission is to break the stigma around men’s mental health and remind people that opening up is courage, not weakness. Your voice matters.";
+      if (t.includes("joke") || t.includes("funny"))
+        return "I’m more dry humour than stand-up… Why did the man bring a ladder to the bar? Because he heard the drinks were on the house. I’ll see myself out.";
+      return "I’m listening. You can also jump into the community and talk to other blokes — fully anonymous if you want. What’s going on?";
+    }
+
+    async function getAIReply(userText) {
+      // Crisis always handled locally and immediately
+      if (isCrisis(userText)) {
+        return {
+          crisis: true,
+          text: "Hey. I’m really glad you said something. I’m just a bot — I can’t give the help you need right now.\n\nPlease reach out to real support straight away:\n• International Association for Suicide Prevention → https://www.iasp.info/suicidalthoughts/\n• Or your local emergency number\n\nYou matter. Please talk to someone who can help you properly."
+        };
+      }
+
+      // No API key → use local replies
+      if (!AI_API_KEY || AI_API_KEY.trim() === "") {
+        return { text: localReply(userText) + "\n\n(Note: add an API key in the code to unlock the full AI.)" };
+      }
+
+      chatHistory.push({ role: "user", content: userText });
+
+      try {
+        const res = await fetch(AI_API_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + AI_API_KEY
+          },
+          body: JSON.stringify({
+            model: AI_MODEL,
+            messages: chatHistory,
+            temperature: 0.7,
+            max_tokens: 250
+          })
+        });
+
+        if (!res.ok) {
+          const err = await res.text();
+          console.error("AI error:", err);
+          return { text: "Sorry, I’m having trouble connecting right now. You can still browse the community or try again in a moment." };
+        }
+
+        const data = await res.json();
+        const reply = data.choices?.[0]?.message?.content?.trim() || "Hmm, I didn’t catch that. Try again?";
+        chatHistory.push({ role: "assistant", content: reply });
+
+        // Keep history from growing forever
+        if (chatHistory.length > 13) {
+          chatHistory.splice(1, 2); // remove oldest user+assistant pair, keep system
+        }
+
+        return { text: reply };
+      } catch (e) {
+        console.error(e);
+        return { text: "Connection hiccup. The community is still here if you want to talk to real people." };
+      }
+    }
+
+    function toggleChat() {
+      const panel = document.getElementById("chat-panel");
+      const fab = document.getElementById("chat-fab");
+      const isOpen = panel.classList.toggle("open");
+      fab.classList.toggle("open", isOpen);
+      fab.textContent = isOpen ? "✕" : "💬";
+      if (isOpen) {
+        const msgs = document.getElementById("chat-messages");
+        if (msgs.children.length === 0) {
+          addBotMessage("Hey. I’m the Unmuted helper bot.\n\nI can explain what this place is, chat, or point you in the right direction. If things feel really heavy, I’ll send you to real help.\n\nWhat’s up?");
+        }
+        document.getElementById("chat-input").focus();
+      }
+    }
+
+    function addBotMessage(text, isCrisis = false) {
+      const msgs = document.getElementById("chat-messages");
+      const div = document.createElement("div");
+      div.className = "chat-bubble bot" + (isCrisis ? " crisis" : "");
+      div.textContent = text;
+      msgs.appendChild(div);
+      msgs.scrollTop = msgs.scrollHeight;
+    }
+
+    function addUserMessage(text) {
+      const msgs = document.getElementById("chat-messages");
+      const div = document.createElement("div");
+      div.className = "chat-bubble user";
+      div.textContent = text;
+      msgs.appendChild(div);
+      msgs.scrollTop = msgs.scrollHeight;
+    }
+
+    function addTyping() {
+      const msgs = document.getElementById("chat-messages");
+      const div = document.createElement("div");
+      div.className = "chat-bubble bot";
+      div.id = "typing-indicator";
+      div.textContent = "…";
+      msgs.appendChild(div);
+      msgs.scrollTop = msgs.scrollHeight;
+    }
+
+    function removeTyping() {
+      const el = document.getElementById("typing-indicator");
+      if (el) el.remove();
+    }
+
+    async function sendChat() {
+      const input = document.getElementById("chat-input");
+      const text = input.value.trim();
+      if (!text) return;
+      addUserMessage(text);
+      input.value = "";
+      input.disabled = true;
+      addTyping();
+
+      const reply = await getAIReply(text);
+      removeTyping();
+      addBotMessage(reply.text, reply.crisis);
+      input.disabled = false;
+      input.focus();
+    }
+
+    document.getElementById("chat-input").addEventListener("keydown", function(e) {
+      if (e.key === "Enter") sendChat();
+    });
+
+    // Start listening to Firestore as soon as the page is ready
+    // This is what makes posts visible to everyone
+    document.addEventListener("DOMContentLoaded", function() {
+      startRealtimeListener();
+      renderHomeTopics();
+    });
+    // Also start immediately in case DOM is already loaded
+    if (document.readyState === "loading") {
+      // wait for DOMContentLoaded
+    } else {
+      startRealtimeListener();
+    }
+</script>
+
+  <!-- Chatbot UI -->
+  <button class="chat-fab" id="chat-fab" onclick="toggleChat()" title="Chat with Unmuted bot">💬</button>
+  <div class="chat-panel" id="chat-panel">
+    <div class="chat-header">
+      <div class="chat-header-left">
+        <div class="chat-avatar">🤖</div>
+        <div>
+          <h3>Unmuted Bot</h3>
+          <p>Calm • Friendly • Honest</p>
+        </div>
+      </div>
+      <button class="chat-close" onclick="toggleChat()">✕</button>
+    </div>
+    <div class="chat-messages" id="chat-messages"></div>
+    <div class="chat-input-row">
+      <input type="text" id="chat-input" placeholder="Type a message…" maxlength="300">
+      <button onclick="sendChat()">Send</button>
+    </div>
+  </div>
+
+
+</body></html>
