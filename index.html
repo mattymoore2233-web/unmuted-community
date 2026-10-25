@@ -23,6 +23,8 @@
       --radius: 14px;
       --radius-lg: 18px;
       --font: system-ui, -apple-system, "Segoe UI", sans-serif;
+      --warn: #f59e0b;
+      --warning-soft: rgba(245, 158, 11, 0.12);
     }
     * { box-sizing: border-box; }
     html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: var(--font); }
@@ -44,8 +46,27 @@
     .btn:hover { background: var(--accent-hover); }
     .btn.outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
     .btn.outline:hover { background: var(--bg-elevated); }
+    .app-status {
+      margin: 0 auto;
+      max-width: 1100px;
+      padding: 14px 20px 0;
+    }
+    .app-status .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--warning-soft);
+      color: #fcd34d;
+      font-size: 0.92rem;
+    }
+    .app-status .badge strong { color: #fef3c7; }
+    .hide { display: none !important; }
     .hero { padding: 90px 0 60px; text-align: center; background: radial-gradient(circle at top, rgba(45,212,191,.15), transparent 40%), linear-gradient(180deg, var(--bg), var(--bg-soft)); }
-    .hero-badge { display: inline-block; padding: 6px 14px; border-radius: 999px; background: rgba(45,212,191,.12); border: 1px solid rgba(45,212,191,.25); color: var(--accent); font-weight: 700; margin-bottom: 22px; }
+    .hero-badge { display: inline-block; padding: 6px 14px; border-radius: 999px; background: rgba(45,212,191,.12); border: 1px solid rgba(45,212,191,.25); color: var(--accent); font-weight: 700; }
     h1 { font-size: clamp(2.5rem, 6vw, 4rem); line-height: 1.05; letter-spacing: -0.05em; margin: 0 auto 18px; max-width: 750px; }
     h1 span { color: var(--accent); }
     .subtitle { max-width: 620px; margin: 0 auto 26px; color: var(--text-muted); font-size: 1.15rem; }
@@ -122,6 +143,10 @@
     </div>
   </nav>
 
+  <div id="appStatus" class="app-status hide" aria-live="polite">
+    <div class="badge"><strong>Demo mode:</strong> live Supabase is not connected yet.</div>
+  </div>
+
   <section id="view-home" class="view active">
     <div class="hero">
       <div class="container">
@@ -180,9 +205,9 @@
       </div>
       <div class="post op" style="margin-top: 24px;">
         <div class="post-body">
-          Unmuted was founded from a simple idea: men deserve a place to say the truth without being judged, exposed, or forced to carry everything alone. The anonymous option gives people room to speak honestly before they’re ready to speak publicly.
+          Unmuted was founded from a simple idea: men deserve a place to say the truth without being judged, exposed, or forced to carry everything alone. The anonymous option gives people room to be honest without risking their identity.
           <br><br>
-          This space is for pressure, burnout, loneliness, relationships, anger, grief, fatherhood, anxiety and every part of male life that is too often left unspoken. It is meant to feel calm, respectful and safe.
+          This space is for pressure, burnout, loneliness, relationships, anger, grief, fatherhood, anxiety and every part of male life that is too often left unspoken. It is meant to feel calm, safe and worth returning to.
           <br><br>
           Your voice matters. Your story matters. You are not weak for speaking up.
         </div>
@@ -287,9 +312,44 @@
   </div>
 
   <script>
-    const SUPABASE_URL = 'https://ozeokntcuukgbboiteon.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZW9rbnRjdXVrYmdib2l0ZW9uIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI5NDUxNjgsImV4cCI6MjEwODUyMTE2OH0._1SJT-Hnb1WMqfBpejRCDwtlIIou6_o9cfxSbch0XXM';
-    const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+    const SITE_CONFIG = {
+      supabaseUrl: 'https://ozeokntcuukgbboiteon.supabase.co',
+      supabaseKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZW9rbnRjdXVrYmdib2l0ZW9uIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI5NDUxNjgsImV4cCI6MjEwODUyMTE2OH0._1SJpS1Fz0x5D0IKG5OzP6Um2oR2o2Pbv4Bv8k6pLWM',
+      demoMode: true
+    };
+
+    function getSupabaseClient() {
+      if (!window.supabase) return null;
+      try {
+        const url = SITE_CONFIG.supabaseUrl;
+        const key = SITE_CONFIG.supabaseKey;
+
+        if (!url || !key || url.includes('your-project') || key.includes('your-anon-key')) {
+          return null;
+        }
+
+        return window.supabase.createClient(url, key);
+      } catch (error) {
+        console.warn('Supabase client setup failed:', error);
+        return null;
+      }
+    }
+
+    function showAppStatus(message, isVisible = true) {
+      const statusEl = document.getElementById('appStatus');
+      if (!statusEl) return;
+
+      if (!message || !isVisible) {
+        statusEl.classList.add('hide');
+        statusEl.innerHTML = '';
+        return;
+      }
+
+      statusEl.classList.remove('hide');
+      statusEl.innerHTML = `<div class="badge"><strong>Notice:</strong> ${message}</div>`;
+    }
+
+    const supabase = getSupabaseClient();
 
     const topicMeta = {
       work: { name: 'Work & Pressure', icon: '💼', desc: 'Deadlines, burnout, career doubts' },
@@ -491,6 +551,7 @@
     async function loadThreads() {
       if (!supabase) {
         threads = seedData();
+        showAppStatus('Supabase is not connected yet, so the app is running in demo mode. Connect Supabase to enable live posts.');
         renderThreads();
         return;
       }
@@ -498,11 +559,20 @@
       try {
         const { data, error } = await supabase.from('threads').select('*').order('created_at', { ascending: false });
         if (error) throw error;
-        threads = (data && data.length ? data : seedData()).map(normalizeThread);
+
+        if (!data || !data.length) {
+          threads = seedData();
+          showAppStatus('No live rows found in the Threads table yet. Showing demo content until live data is available.');
+        } else {
+          threads = data.map(normalizeThread);
+          showAppStatus('');
+        }
+
         renderThreads();
       } catch (error) {
         console.warn('Supabase load failed. Using seeded data instead.', error);
         threads = seedData();
+        showAppStatus('Could not load live data. Showing demo content until Supabase is configured correctly.');
         renderThreads();
       }
     }
@@ -535,6 +605,7 @@
         closeNewThread();
         filterTopic(topic);
         openThread(threads[0].id);
+        showAppStatus('Demo mode is active, so this post was added locally only. Connect Supabase to save it live.');
         return;
       }
 
@@ -547,7 +618,7 @@
         openThread(data.id);
       } catch (error) {
         console.error('Create failed:', error);
-        alert('Could not create the post. Check your Supabase table and permissions.');
+        alert('Could not create the post. Check the Supabase table and permissions.');
       }
     }
 
@@ -570,6 +641,7 @@
         thread.posts = updatedPosts;
         thread.replies = nextReplyCount;
         openThread(currentThreadId);
+        showAppStatus('Demo mode is active, so this reply was added locally only. Connect Supabase to save it live.');
         return;
       }
 
